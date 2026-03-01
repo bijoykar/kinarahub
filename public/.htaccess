@@ -4,7 +4,7 @@ Options -Indexes
 # Enable rewrite engine
 # ---------------------------------------------------------------------------
 RewriteEngine On
-RewriteBase /kinarahub/public/
+RewriteBase /
 
 # ---------------------------------------------------------------------------
 # Security headers
@@ -21,7 +21,7 @@ RewriteBase /kinarahub/public/
 # Block direct access to any .php file EXCEPT index.php itself
 # ---------------------------------------------------------------------------
 RewriteCond %{THE_REQUEST} \.(php) [NC]
-RewriteCond %{REQUEST_URI} !^/kinarahub/public/index\.php [NC]
+RewriteCond %{REQUEST_URI} !^/index\.php [NC]
 RewriteRule \.php$ - [F,L]
 
 # ---------------------------------------------------------------------------
