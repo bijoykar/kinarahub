@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Core\Database;
+use App\Core\TenantScope;
 use PDO;
 
 /**
@@ -26,10 +27,14 @@ class CategoryModel
      */
     public function listForStore(int $storeId): array
     {
-        $stmt = $this->pdo->prepare(
-            'SELECT id, name FROM categories WHERE store_id = ? ORDER BY name ASC'
-        );
-        $stmt->execute([$storeId]);
+        $sql = 'SELECT id, name FROM categories';
+        $params = [];
+        $sql = TenantScope::appendWhere($sql);
+        TenantScope::apply($params, $storeId);
+        $sql .= ' ORDER BY name ASC';
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute($params);
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
@@ -41,10 +46,14 @@ class CategoryModel
      */
     public function findById(int $id, int $storeId): ?array
     {
-        $stmt = $this->pdo->prepare(
-            'SELECT * FROM categories WHERE id = ? AND store_id = ? LIMIT 1'
-        );
-        $stmt->execute([$id, $storeId]);
+        $sql = 'SELECT * FROM categories WHERE id = ?';
+        $params = [$id];
+        $sql = TenantScope::appendWhere($sql);
+        TenantScope::apply($params, $storeId);
+        $sql .= ' LIMIT 1';
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute($params);
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
         return $row !== false ? $row : null;
@@ -57,10 +66,14 @@ class CategoryModel
      */
     public function findByName(string $name, int $storeId): ?array
     {
-        $stmt = $this->pdo->prepare(
-            'SELECT * FROM categories WHERE name = ? AND store_id = ? LIMIT 1'
-        );
-        $stmt->execute([$name, $storeId]);
+        $sql = 'SELECT * FROM categories WHERE name = ?';
+        $params = [$name];
+        $sql = TenantScope::appendWhere($sql);
+        TenantScope::apply($params, $storeId);
+        $sql .= ' LIMIT 1';
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute($params);
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
         return $row !== false ? $row : null;
@@ -86,10 +99,13 @@ class CategoryModel
      */
     public function update(int $id, int $storeId, string $name): void
     {
-        $stmt = $this->pdo->prepare(
-            'UPDATE categories SET name = ? WHERE id = ? AND store_id = ?'
-        );
-        $stmt->execute([$name, $id, $storeId]);
+        $sql = 'UPDATE categories SET name = ? WHERE id = ?';
+        $params = [$name, $id];
+        $sql = TenantScope::appendWhere($sql);
+        TenantScope::apply($params, $storeId);
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute($params);
     }
 
     /**
@@ -100,18 +116,24 @@ class CategoryModel
     public function delete(int $id, int $storeId): bool
     {
         // Check if any products reference this category.
-        $stmt = $this->pdo->prepare(
-            'SELECT COUNT(*) FROM products WHERE category_id = ? AND store_id = ?'
-        );
-        $stmt->execute([$id, $storeId]);
+        $sql = 'SELECT COUNT(*) FROM products WHERE category_id = ?';
+        $params = [$id];
+        $sql = TenantScope::appendWhere($sql);
+        TenantScope::apply($params, $storeId);
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute($params);
         if ((int) $stmt->fetchColumn() > 0) {
             return false;
         }
 
-        $stmt = $this->pdo->prepare(
-            'DELETE FROM categories WHERE id = ? AND store_id = ?'
-        );
-        $stmt->execute([$id, $storeId]);
+        $sql = 'DELETE FROM categories WHERE id = ?';
+        $params = [$id];
+        $sql = TenantScope::appendWhere($sql);
+        TenantScope::apply($params, $storeId);
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute($params);
 
         return true;
     }

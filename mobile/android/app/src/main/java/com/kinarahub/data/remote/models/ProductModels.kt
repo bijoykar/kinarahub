@@ -73,3 +73,26 @@ data class CreateProductRequest(
     @SerializedName("reorder_point")
     val reorderPoint: Double
 )
+
+data class UpdateProductRequest(
+    val sku: String?,
+    val name: String?,
+    @SerializedName("category_id")
+    val categoryId: Int?,
+    @SerializedName("uom_id")
+    val uomId: Int?,
+    @SerializedName("selling_price")
+    val sellingPrice: Double?,
+    @SerializedName("cost_price")
+    val costPrice: Double?,
+    @SerializedName("stock_quantity")
+    val stockQuantity: Double?,
+    @SerializedName("reorder_point")
+    val reorderPoint: Double?,
+    val version: Int
+)
+
+data class CreateProductResponse(
+    @SerializedName("product_id")
+    val productId: Int
+)

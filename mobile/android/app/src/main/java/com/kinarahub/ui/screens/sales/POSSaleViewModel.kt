@@ -183,7 +183,7 @@ class POSSaleViewModel @Inject constructor(
                     if (body?.success == true && body.data != null) {
                         _uiState.value = _uiState.value.copy(
                             isSubmitting = false,
-                            completedSaleId = body.data.id
+                            completedSaleId = body.data.saleId
                         )
                     } else {
                         _uiState.value = _uiState.value.copy(

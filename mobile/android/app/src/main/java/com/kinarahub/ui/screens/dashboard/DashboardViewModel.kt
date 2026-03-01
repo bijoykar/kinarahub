@@ -4,8 +4,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.kinarahub.data.local.TokenStore
 import com.kinarahub.data.remote.ApiService
+import com.kinarahub.data.remote.models.ChartData
 import com.kinarahub.data.remote.models.DashboardSummary
-import com.kinarahub.data.remote.models.SalesTrend
+import com.kinarahub.data.remote.models.LogoutRequest
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -31,8 +32,8 @@ class DashboardViewModel @Inject constructor(
     private val _selectedPeriod = MutableStateFlow("week")
     val selectedPeriod: StateFlow<String> = _selectedPeriod.asStateFlow()
 
-    private val _salesTrend = MutableStateFlow<SalesTrend?>(null)
-    val salesTrend: StateFlow<SalesTrend?> = _salesTrend.asStateFlow()
+    private val _salesTrend = MutableStateFlow<ChartData?>(null)
+    val salesTrend: StateFlow<ChartData?> = _salesTrend.asStateFlow()
 
     private val _isTrendLoading = MutableStateFlow(false)
     val isTrendLoading: StateFlow<Boolean> = _isTrendLoading.asStateFlow()
@@ -53,7 +54,7 @@ class DashboardViewModel @Inject constructor(
                     val body = response.body()
                     if (body?.success == true && body.data != null) {
                         _uiState.value = DashboardUiState.Success(body.data)
-                        // Use embedded sales_trend from summary as initial data
+                        // Use embedded sales_trend from summary as initial chart data
                         _salesTrend.value = body.data.salesTrend
                     } else {
                         _uiState.value = DashboardUiState.Error(
@@ -76,14 +77,14 @@ class DashboardViewModel @Inject constructor(
         viewModelScope.launch {
             _isTrendLoading.value = true
             try {
-                // The dashboard summary endpoint returns sales_trend data.
-                // When the API supports a period query param, this will filter by period.
-                // For now, we re-fetch the full summary to get trend data.
-                val response = apiService.getDashboardSummary()
+                val response = apiService.getDashboardChart(
+                    type = "sales_trend",
+                    period = period
+                )
                 if (response.isSuccessful) {
                     val body = response.body()
                     if (body?.success == true && body.data != null) {
-                        _salesTrend.value = body.data.salesTrend
+                        _salesTrend.value = body.data
                     }
                 }
             } catch (_: Exception) {
@@ -97,7 +98,10 @@ class DashboardViewModel @Inject constructor(
     fun logout() {
         viewModelScope.launch {
             try {
-                apiService.logout()
+                val refreshToken = tokenStore.refreshToken
+                if (refreshToken != null) {
+                    apiService.logout(LogoutRequest(refreshToken))
+                }
             } catch (_: Exception) {
                 // Best-effort logout
             }

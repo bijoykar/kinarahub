@@ -1,0 +1,13 @@
+RewriteEngine On
+RewriteBase /kinarahub/api/v1/
+
+# CORS preflight — let OPTIONS through to index.php
+RewriteCond %{REQUEST_METHOD} =OPTIONS
+RewriteRule ^ index.php [QSA,L]
+
+# Skip real files and directories
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# Route everything to the API front controller
+RewriteRule ^ index.php [QSA,L]

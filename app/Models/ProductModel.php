@@ -5,12 +5,14 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Core\Database;
+use App\Core\TenantScope;
 use PDO;
 
 /**
  * ProductModel — Database queries for products and product_variants.
  *
- * All queries use PDO prepared statements. Tenant-scoped via store_id parameter.
+ * All queries use PDO prepared statements.
+ * Tenant-scoped via TenantScope::appendWhere() and TenantScope::apply().
  */
 class ProductModel
 {
@@ -38,8 +40,8 @@ class ProductModel
      */
     public function listPaginated(int $storeId, int $page, int $perPage, string $search = '', int $categoryId = 0, string $status = ''): array
     {
-        $where = ['p.store_id = ?'];
-        $params = [$storeId];
+        $where = [];
+        $params = [];
 
         if ($search !== '') {
             $where[] = '(p.name LIKE ? OR p.sku LIKE ?)';
@@ -66,12 +68,16 @@ class ProductModel
             $where[] = "p.status = 'active'";
         }
 
-        $whereClause = implode(' AND ', $where);
+        $filterClause = !empty($where) ? implode(' AND ', $where) : '1=1';
 
         // Count total.
-        $countSql = "SELECT COUNT(*) FROM products p WHERE {$whereClause}";
+        $countSql = "SELECT COUNT(*) FROM products p WHERE {$filterClause}";
+        $countSql = TenantScope::appendWhere($countSql, 'p');
+        $countParams = $params;
+        TenantScope::apply($countParams, $storeId);
+
         $stmt = $this->pdo->prepare($countSql);
-        $stmt->execute($params);
+        $stmt->execute($countParams);
         $total = (int) $stmt->fetchColumn();
 
         // Fetch paginated results.
@@ -81,15 +87,17 @@ class ProductModel
                 FROM products p
                 LEFT JOIN categories c ON c.id = p.category_id
                 LEFT JOIN units_of_measure u ON u.id = p.uom_id
-                WHERE {$whereClause}
-                ORDER BY p.updated_at DESC
-                LIMIT ? OFFSET ?";
+                WHERE {$filterClause}";
+        $sql = TenantScope::appendWhere($sql, 'p');
+        $sql .= ' ORDER BY p.updated_at DESC LIMIT ? OFFSET ?';
 
-        $params[] = $perPage;
-        $params[] = $offset;
+        $fetchParams = $params;
+        TenantScope::apply($fetchParams, $storeId);
+        $fetchParams[] = $perPage;
+        $fetchParams[] = $offset;
 
         $stmt = $this->pdo->prepare($sql);
-        $stmt->execute($params);
+        $stmt->execute($fetchParams);
         $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         // Compute stock_status for each product.
@@ -119,11 +127,14 @@ class ProductModel
                 FROM products p
                 LEFT JOIN categories c ON c.id = p.category_id
                 LEFT JOIN units_of_measure u ON u.id = p.uom_id
-                WHERE p.id = ? AND p.store_id = ?
-                LIMIT 1';
+                WHERE p.id = ?';
+        $params = [$id];
+        $sql = TenantScope::appendWhere($sql, 'p');
+        TenantScope::apply($params, $storeId);
+        $sql .= ' LIMIT 1';
 
         $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([$id, $storeId]);
+        $stmt->execute($params);
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if ($row === false) {
@@ -145,10 +156,14 @@ class ProductModel
      */
     public function findBySku(string $sku, int $storeId): ?array
     {
-        $stmt = $this->pdo->prepare(
-            'SELECT * FROM products WHERE sku = ? AND store_id = ? LIMIT 1'
-        );
-        $stmt->execute([strtoupper($sku), $storeId]);
+        $sql = 'SELECT * FROM products WHERE sku = ?';
+        $params = [strtoupper($sku)];
+        $sql = TenantScope::appendWhere($sql);
+        TenantScope::apply($params, $storeId);
+        $sql .= ' LIMIT 1';
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute($params);
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
         return $row !== false ? $row : null;
@@ -215,11 +230,12 @@ class ProductModel
         // Increment version.
         $fields[] = 'version = version + 1';
 
+        $sql = 'UPDATE products SET ' . implode(', ', $fields) . ' WHERE id = ? AND version = ?';
         $params[] = $id;
-        $params[] = $storeId;
         $params[] = $expectedVersion;
+        $sql = TenantScope::appendWhere($sql);
+        TenantScope::apply($params, $storeId);
 
-        $sql = 'UPDATE products SET ' . implode(', ', $fields) . ' WHERE id = ? AND store_id = ? AND version = ?';
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute($params);
 
@@ -227,14 +243,17 @@ class ProductModel
     }
 
     /**
-     * Delete a product (soft: set status to inactive, or hard delete if no sales reference it).
+     * Delete a product (soft: set status to inactive).
      */
     public function deactivate(int $id, int $storeId): void
     {
-        $stmt = $this->pdo->prepare(
-            'UPDATE products SET status = ? WHERE id = ? AND store_id = ?'
-        );
-        $stmt->execute(['inactive', $id, $storeId]);
+        $sql = 'UPDATE products SET status = ? WHERE id = ?';
+        $params = ['inactive', $id];
+        $sql = TenantScope::appendWhere($sql);
+        TenantScope::apply($params, $storeId);
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute($params);
     }
 
     // -----------------------------------------------------------------------
@@ -276,12 +295,14 @@ class ProductModel
                        p.selling_price, p.cost_price, p.stock_quantity, p.reorder_point, p.status
                 FROM products p
                 LEFT JOIN categories c ON c.id = p.category_id
-                LEFT JOIN units_of_measure u ON u.id = p.uom_id
-                WHERE p.store_id = ?
-                ORDER BY p.name ASC';
+                LEFT JOIN units_of_measure u ON u.id = p.uom_id';
+        $params = [];
+        $sql = TenantScope::appendWhere($sql, 'p');
+        TenantScope::apply($params, $storeId);
+        $sql .= ' ORDER BY p.name ASC';
 
         $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([$storeId]);
+        $stmt->execute($params);
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
@@ -327,13 +348,16 @@ class ProductModel
      */
     public function decrementStock(int $productId, int $storeId, float $quantity, int $expectedVersion): bool
     {
-        $stmt = $this->pdo->prepare(
-            'UPDATE products
-             SET stock_quantity = stock_quantity - ?,
-                 version = version + 1
-             WHERE id = ? AND store_id = ? AND version = ? AND stock_quantity >= ?'
-        );
-        $stmt->execute([$quantity, $productId, $storeId, $expectedVersion, $quantity]);
+        $sql = 'UPDATE products
+                SET stock_quantity = stock_quantity - ?,
+                    version = version + 1
+                WHERE id = ? AND version = ? AND stock_quantity >= ?';
+        $params = [$quantity, $productId, $expectedVersion, $quantity];
+        $sql = TenantScope::appendWhere($sql);
+        TenantScope::apply($params, $storeId);
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute($params);
 
         return $stmt->rowCount() > 0;
     }

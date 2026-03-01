@@ -3,38 +3,68 @@ package com.kinarahub.data.remote.models
 import com.google.gson.annotations.SerializedName
 
 data class DashboardSummary(
-    @SerializedName("sales_today")
-    val salesToday: Double,
-    @SerializedName("sales_yesterday")
-    val salesYesterday: Double,
-    @SerializedName("sales_today_change")
-    val salesTodayChange: Double?,
-    @SerializedName("sales_this_week")
-    val salesThisWeek: Double,
-    @SerializedName("sales_this_month")
-    val salesThisMonth: Double,
-    @SerializedName("total_stock_value")
-    val totalStockValue: Double,
-    @SerializedName("out_of_stock_count")
+    @SerializedName("today_revenue")
+    val todayRevenue: Double,
+    @SerializedName("yesterday_revenue")
+    val yesterdayRevenue: Double,
+    @SerializedName("percent_change")
+    val percentChange: Double?,
+    @SerializedName("week_revenue")
+    val weekRevenue: Double,
+    @SerializedName("month_revenue")
+    val monthRevenue: Double,
+    @SerializedName("stock_value")
+    val stockValue: Double,
+    @SerializedName("out_of_stock")
     val outOfStockCount: Int,
-    @SerializedName("low_stock_count")
+    @SerializedName("low_stock")
     val lowStockCount: Int,
-    @SerializedName("top_products_today")
-    val topProductsToday: List<TopProduct>?,
+    @SerializedName("top_products")
+    val topProducts: List<TopProduct>?,
     @SerializedName("recent_sales")
-    val recentSales: List<Sale>?,
+    val recentSales: List<RecentSale>?,
     @SerializedName("sales_trend")
-    val salesTrend: SalesTrend?
+    val salesTrend: ChartData?,
+    @SerializedName("payment_breakdown")
+    val paymentBreakdown: ChartData?,
+    @SerializedName("stock_distribution")
+    val stockDistribution: StockDistribution?
 )
 
 data class TopProduct(
-    val name: String,
+    @SerializedName("product_name")
+    val productName: String,
     @SerializedName("units_sold")
     val unitsSold: Double,
     val revenue: Double
 )
 
-data class SalesTrend(
+data class RecentSale(
+    @SerializedName("sale_number")
+    val saleNumber: String,
+    @SerializedName("sale_date")
+    val saleDate: String,
+    @SerializedName("payment_method")
+    val paymentMethod: String,
+    @SerializedName("total_amount")
+    val totalAmount: Double,
+    @SerializedName("customer_name")
+    val customerName: String?
+)
+
+/**
+ * Generic chart data returned by /dashboard/chart and embedded in /dashboard summary.
+ * Backend uses { labels: [], amounts: [] } for sales_trend and payment_breakdown.
+ */
+data class ChartData(
     val labels: List<String>,
-    val values: List<Double>
+    val amounts: List<Double>?
+)
+
+/**
+ * Stock distribution chart data: { labels: [], counts: [] }
+ */
+data class StockDistribution(
+    val labels: List<String>,
+    val counts: List<Int>
 )

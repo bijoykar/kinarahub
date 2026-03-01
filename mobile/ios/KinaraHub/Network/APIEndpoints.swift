@@ -17,10 +17,6 @@ enum APIEndpoints {
         static func detail(_ id: Int) -> String {
             "\(baseURL)/products/\(id)"
         }
-
-        static func variants(_ id: Int) -> String {
-            "\(baseURL)/products/\(id)/variants"
-        }
     }
 
     // MARK: - Sales
@@ -49,6 +45,7 @@ enum APIEndpoints {
 
     // MARK: - Dashboard
     enum Dashboard {
-        static let summary = "\(baseURL)/dashboard/summary"
+        static let summary = "\(baseURL)/dashboard"
+        static let chart = "\(baseURL)/dashboard/chart"
     }
 }

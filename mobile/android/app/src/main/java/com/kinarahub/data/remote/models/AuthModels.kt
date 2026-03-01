@@ -14,13 +14,20 @@ data class RefreshRequest(
     val refreshToken: String
 )
 
+data class LogoutRequest(
+    @SerializedName("refresh_token")
+    val refreshToken: String
+)
+
 // --- Responses ---
 
 data class AuthData(
     @SerializedName("access_token")
     val accessToken: String,
     @SerializedName("refresh_token")
-    val refreshToken: String,
+    val refreshToken: String?,
+    @SerializedName("token_type")
+    val tokenType: String?,
     @SerializedName("expires_in")
     val expiresIn: Int,
     val user: UserInfo?
@@ -35,7 +42,12 @@ data class UserInfo(
     @SerializedName("store_name")
     val storeName: String?,
     @SerializedName("role_id")
-    val roleId: Int,
-    @SerializedName("role_name")
-    val roleName: String?
+    val roleId: Int
+)
+
+/**
+ * Generic message response used by logout, update, delete endpoints.
+ */
+data class MessageResponse(
+    val message: String?
 )

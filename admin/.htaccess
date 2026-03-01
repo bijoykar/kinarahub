@@ -1,0 +1,10 @@
+RewriteEngine On
+RewriteBase /kinarahub/admin/
+
+# Do not rewrite real files/directories
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+
+# Funnel all admin requests through admin/index.php
+RewriteRule ^ index.php [QSA,L]

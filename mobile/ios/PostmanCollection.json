@@ -56,7 +56,7 @@
               "name": "200 — Success",
               "status": "OK",
               "code": 200,
-              "body": "{\n  \"success\": true,\n  \"data\": {\n    \"access_token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...\",\n    \"refresh_token\": \"dGhpcyBpcyBhIHJlZnJlc2ggdG9rZW4...\",\n    \"expires_in\": 900\n  },\n  \"meta\": null,\n  \"error\": null\n}"
+              "body": "{\n  \"success\": true,\n  \"data\": {\n    \"access_token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...\",\n    \"refresh_token\": \"dGhpcyBpcyBhIHJlZnJlc2ggdG9rZW4...\",\n    \"token_type\": \"Bearer\",\n    \"expires_in\": 900,\n    \"user\": {\n      \"id\": 1,\n      \"name\": \"Store Owner\",\n      \"email\": \"owner@example.com\",\n      \"store_id\": 1,\n      \"store_name\": \"Demo Kinara Store\",\n      \"role_id\": 1\n    }\n  },\n  \"meta\": null,\n  \"error\": null\n}"
             },
             {
               "name": "401 — Invalid credentials",
@@ -90,7 +90,7 @@
               "name": "200 — New tokens",
               "status": "OK",
               "code": 200,
-              "body": "{\n  \"success\": true,\n  \"data\": {\n    \"access_token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.new...\",\n    \"refresh_token\": \"bmV3IHJlZnJlc2ggdG9rZW4...\",\n    \"expires_in\": 900\n  },\n  \"meta\": null,\n  \"error\": null\n}"
+              "body": "{\n  \"success\": true,\n  \"data\": {\n    \"access_token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.new...\",\n    \"refresh_token\": \"bmV3IHJlZnJlc2ggdG9rZW4...\",\n    \"token_type\": \"Bearer\",\n    \"expires_in\": 900\n  },\n  \"meta\": null,\n  \"error\": null\n}"
             },
             {
               "name": "401 — Invalid refresh token",
@@ -140,14 +140,14 @@
               { "key": "Accept", "value": "application/json" }
             ],
             "url": {
-              "raw": "{{base_url}}/products?page=1&per_page=20&search=&category=",
+              "raw": "{{base_url}}/products?page=1&per_page=20&search=&category_id=",
               "host": ["{{base_url}}"],
               "path": ["products"],
               "query": [
                 { "key": "page", "value": "1" },
                 { "key": "per_page", "value": "20" },
                 { "key": "search", "value": "", "description": "Search by name or SKU" },
-                { "key": "category", "value": "", "description": "Filter by category name" }
+                { "key": "category_id", "value": "", "description": "Filter by category ID" }
               ]
             }
           },
@@ -156,7 +156,7 @@
               "name": "200 — Paginated products",
               "status": "OK",
               "code": 200,
-              "body": "{\n  \"success\": true,\n  \"data\": [\n    {\n      \"id\": 1,\n      \"store_id\": 1,\n      \"sku\": \"SKU001\",\n      \"name\": \"Basmati Rice 5kg\",\n      \"category_id\": 2,\n      \"category_name\": \"Grains\",\n      \"uom_id\": 1,\n      \"uom_name\": \"Pieces\",\n      \"uom_abbreviation\": \"Pcs\",\n      \"selling_price\": \"450.00\",\n      \"cost_price\": \"380.00\",\n      \"stock_quantity\": \"25.000\",\n      \"reorder_point\": \"5.000\",\n      \"status\": \"active\",\n      \"version\": 1,\n      \"variants\": null,\n      \"created_at\": \"2026-03-01 10:00:00\",\n      \"updated_at\": \"2026-03-01 10:00:00\"\n    },\n    {\n      \"id\": 2,\n      \"store_id\": 1,\n      \"sku\": \"SKU002\",\n      \"name\": \"Toor Dal 1kg\",\n      \"category_id\": 2,\n      \"category_name\": \"Grains\",\n      \"uom_id\": 1,\n      \"uom_name\": \"Pieces\",\n      \"uom_abbreviation\": \"Pcs\",\n      \"selling_price\": \"160.00\",\n      \"cost_price\": \"130.00\",\n      \"stock_quantity\": \"0.000\",\n      \"reorder_point\": \"10.000\",\n      \"status\": \"active\",\n      \"version\": 2,\n      \"variants\": null,\n      \"created_at\": \"2026-03-01 10:00:00\",\n      \"updated_at\": \"2026-03-01 12:30:00\"\n    }\n  ],\n  \"meta\": {\n    \"page\": 1,\n    \"per_page\": 20,\n    \"total\": 48\n  },\n  \"error\": null\n}"
+              "body": "{\n  \"success\": true,\n  \"data\": [\n    {\n      \"id\": 1,\n      \"store_id\": 1,\n      \"sku\": \"SKU001\",\n      \"name\": \"Basmati Rice 5kg\",\n      \"category_id\": 2,\n      \"category_name\": \"Grains\",\n      \"uom_id\": 1,\n      \"uom_name\": \"Pieces\",\n      \"uom_abbreviation\": \"Pcs\",\n      \"selling_price\": \"450.00\",\n      \"cost_price\": \"380.00\",\n      \"stock_quantity\": \"25.000\",\n      \"reorder_point\": \"5.000\",\n      \"status\": \"active\",\n      \"version\": 1,\n      \"variants\": null,\n      \"created_at\": \"2026-03-01 10:00:00\",\n      \"updated_at\": \"2026-03-01 10:00:00\"\n    }\n  ],\n  \"meta\": {\n    \"page\": 1,\n    \"per_page\": 20,\n    \"total\": 48,\n    \"total_pages\": 3\n  },\n  \"error\": null\n}"
             }
           ]
         },
@@ -185,116 +185,6 @@
               "status": "Not Found",
               "code": 404,
               "body": "{\n  \"success\": false,\n  \"data\": null,\n  \"meta\": null,\n  \"error\": \"Product not found.\"\n}"
-            }
-          ]
-        },
-        {
-          "name": "Get Product Variants",
-          "request": {
-            "method": "GET",
-            "header": [
-              { "key": "Accept", "value": "application/json" }
-            ],
-            "url": {
-              "raw": "{{base_url}}/products/1/variants",
-              "host": ["{{base_url}}"],
-              "path": ["products", "1", "variants"]
-            }
-          },
-          "response": [
-            {
-              "name": "200 — Variants list",
-              "status": "OK",
-              "code": 200,
-              "body": "{\n  \"success\": true,\n  \"data\": [\n    {\n      \"id\": 1,\n      \"product_id\": 1,\n      \"variant_name\": \"5kg Pack\",\n      \"sku\": \"SKU001-5KG\",\n      \"selling_price\": \"450.00\",\n      \"cost_price\": \"380.00\",\n      \"stock_quantity\": \"15.000\",\n      \"reorder_point\": \"3.000\",\n      \"version\": 0\n    }\n  ],\n  \"meta\": null,\n  \"error\": null\n}"
-            }
-          ]
-        },
-        {
-          "name": "Create Product",
-          "request": {
-            "method": "POST",
-            "header": [
-              { "key": "Content-Type", "value": "application/json" },
-              { "key": "Accept", "value": "application/json" }
-            ],
-            "url": {
-              "raw": "{{base_url}}/products",
-              "host": ["{{base_url}}"],
-              "path": ["products"]
-            },
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"sku\": \"SKU003\",\n  \"name\": \"Sugar 1kg\",\n  \"category_id\": 2,\n  \"uom_id\": 1,\n  \"selling_price\": \"55.00\",\n  \"cost_price\": \"42.00\",\n  \"stock_quantity\": \"100.000\",\n  \"reorder_point\": \"20.000\"\n}"
-            }
-          },
-          "response": [
-            {
-              "name": "201 — Created",
-              "status": "Created",
-              "code": 201,
-              "body": "{\n  \"success\": true,\n  \"data\": {\n    \"id\": 3,\n    \"store_id\": 1,\n    \"sku\": \"SKU003\",\n    \"name\": \"Sugar 1kg\",\n    \"category_id\": 2,\n    \"category_name\": \"Grains\",\n    \"uom_id\": 1,\n    \"uom_name\": \"Pieces\",\n    \"uom_abbreviation\": \"Pcs\",\n    \"selling_price\": \"55.00\",\n    \"cost_price\": \"42.00\",\n    \"stock_quantity\": \"100.000\",\n    \"reorder_point\": \"20.000\",\n    \"status\": \"active\",\n    \"version\": 0,\n    \"variants\": null,\n    \"created_at\": \"2026-03-01 14:00:00\",\n    \"updated_at\": \"2026-03-01 14:00:00\"\n  },\n  \"meta\": null,\n  \"error\": null\n}"
-            },
-            {
-              "name": "422 — Validation error",
-              "status": "Unprocessable Entity",
-              "code": 422,
-              "body": "{\n  \"success\": false,\n  \"data\": null,\n  \"meta\": null,\n  \"error\": \"The sku field is required. The name field is required.\"\n}"
-            }
-          ]
-        },
-        {
-          "name": "Update Product",
-          "request": {
-            "method": "PUT",
-            "header": [
-              { "key": "Content-Type", "value": "application/json" },
-              { "key": "Accept", "value": "application/json" }
-            ],
-            "url": {
-              "raw": "{{base_url}}/products/1",
-              "host": ["{{base_url}}"],
-              "path": ["products", "1"]
-            },
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"name\": \"Basmati Rice Premium 5kg\",\n  \"selling_price\": \"499.00\",\n  \"version\": 1\n}"
-            }
-          },
-          "response": [
-            {
-              "name": "200 — Updated",
-              "status": "OK",
-              "code": 200,
-              "body": "{\n  \"success\": true,\n  \"data\": {\n    \"id\": 1,\n    \"sku\": \"SKU001\",\n    \"name\": \"Basmati Rice Premium 5kg\",\n    \"selling_price\": \"499.00\",\n    \"version\": 2\n  },\n  \"meta\": null,\n  \"error\": null\n}"
-            },
-            {
-              "name": "409 — Version conflict",
-              "status": "Conflict",
-              "code": 409,
-              "body": "{\n  \"success\": false,\n  \"data\": null,\n  \"meta\": null,\n  \"error\": \"Data was modified by another user. Please refresh and try again.\"\n}"
-            }
-          ]
-        },
-        {
-          "name": "Delete Product",
-          "request": {
-            "method": "DELETE",
-            "header": [
-              { "key": "Accept", "value": "application/json" }
-            ],
-            "url": {
-              "raw": "{{base_url}}/products/1",
-              "host": ["{{base_url}}"],
-              "path": ["products", "1"]
-            }
-          },
-          "response": [
-            {
-              "name": "200 — Deleted",
-              "status": "OK",
-              "code": 200,
-              "body": "{\n  \"success\": true,\n  \"data\": null,\n  \"meta\": null,\n  \"error\": null\n}"
             }
           ]
         }
@@ -329,43 +219,10 @@
               "body": "{\n  \"success\": true,\n  \"data\": {\n    \"id\": 1,\n    \"store_id\": 1,\n    \"sale_number\": \"INV-00001\",\n    \"sale_date\": \"2026-03-01\",\n    \"entry_mode\": \"pos\",\n    \"customer_id\": null,\n    \"customer_name\": \"Walk-in Customer\",\n    \"payment_method\": \"cash\",\n    \"subtotal\": \"1060.00\",\n    \"tax_amount\": \"0.00\",\n    \"total_amount\": \"1060.00\",\n    \"notes\": null,\n    \"created_by\": 1,\n    \"created_by_name\": \"Store Owner\",\n    \"items\": [\n      {\n        \"id\": 1,\n        \"product_id\": 1,\n        \"variant_id\": null,\n        \"product_name_snapshot\": \"Basmati Rice 5kg\",\n        \"sku_snapshot\": \"SKU001\",\n        \"quantity\": \"2\",\n        \"unit_price\": \"450.00\",\n        \"cost_price_snapshot\": \"380.00\",\n        \"line_total\": \"900.00\"\n      },\n      {\n        \"id\": 2,\n        \"product_id\": 2,\n        \"variant_id\": null,\n        \"product_name_snapshot\": \"Toor Dal 1kg\",\n        \"sku_snapshot\": \"SKU002\",\n        \"quantity\": \"1\",\n        \"unit_price\": \"160.00\",\n        \"cost_price_snapshot\": \"130.00\",\n        \"line_total\": \"160.00\"\n      }\n    ],\n    \"created_at\": \"2026-03-01 14:30:00\"\n  },\n  \"meta\": null,\n  \"error\": null\n}"
             },
             {
-              "name": "422 — Validation error (credit without customer)",
-              "status": "Unprocessable Entity",
-              "code": 422,
-              "body": "{\n  \"success\": false,\n  \"data\": null,\n  \"meta\": null,\n  \"error\": \"Customer required for credit sales.\"\n}"
-            },
-            {
               "name": "409 — Stock version conflict",
               "status": "Conflict",
               "code": 409,
               "body": "{\n  \"success\": false,\n  \"data\": null,\n  \"meta\": null,\n  \"error\": \"Stock was modified by another user. Please refresh and try again.\"\n}"
-            }
-          ]
-        },
-        {
-          "name": "Create Sale (Credit with Customer)",
-          "request": {
-            "method": "POST",
-            "header": [
-              { "key": "Content-Type", "value": "application/json" },
-              { "key": "Accept", "value": "application/json" }
-            ],
-            "url": {
-              "raw": "{{base_url}}/sales",
-              "host": ["{{base_url}}"],
-              "path": ["sales"]
-            },
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"entry_mode\": \"pos\",\n  \"sale_date\": null,\n  \"customer_id\": 3,\n  \"payment_method\": \"credit\",\n  \"notes\": \"Monthly bulk order\",\n  \"items\": [\n    {\n      \"product_id\": 1,\n      \"variant_id\": null,\n      \"quantity\": \"10\",\n      \"unit_price\": \"450.00\"\n    }\n  ]\n}"
-            }
-          },
-          "response": [
-            {
-              "name": "201 — Credit sale created",
-              "status": "Created",
-              "code": 201,
-              "body": "{\n  \"success\": true,\n  \"data\": {\n    \"id\": 2,\n    \"sale_number\": \"INV-00002\",\n    \"sale_date\": \"2026-03-01\",\n    \"entry_mode\": \"pos\",\n    \"customer_id\": 3,\n    \"customer_name\": \"Ramesh Kumar\",\n    \"payment_method\": \"credit\",\n    \"subtotal\": \"4500.00\",\n    \"tax_amount\": \"0.00\",\n    \"total_amount\": \"4500.00\",\n    \"notes\": \"Monthly bulk order\",\n    \"items\": [\n      {\n        \"id\": 3,\n        \"product_id\": 1,\n        \"variant_id\": null,\n        \"product_name_snapshot\": \"Basmati Rice 5kg\",\n        \"sku_snapshot\": \"SKU001\",\n        \"quantity\": \"10\",\n        \"unit_price\": \"450.00\",\n        \"cost_price_snapshot\": \"380.00\",\n        \"line_total\": \"4500.00\"\n      }\n    ],\n    \"created_at\": \"2026-03-01 15:00:00\"\n  },\n  \"meta\": null,\n  \"error\": null\n}"
             }
           ]
         },
@@ -393,7 +250,7 @@
               "name": "200 — Paginated sales",
               "status": "OK",
               "code": 200,
-              "body": "{\n  \"success\": true,\n  \"data\": [\n    {\n      \"id\": 1,\n      \"store_id\": 1,\n      \"sale_number\": \"INV-00001\",\n      \"sale_date\": \"2026-03-01\",\n      \"entry_mode\": \"pos\",\n      \"customer_id\": null,\n      \"customer_name\": \"Walk-in Customer\",\n      \"payment_method\": \"cash\",\n      \"subtotal\": \"1060.00\",\n      \"tax_amount\": \"0.00\",\n      \"total_amount\": \"1060.00\",\n      \"notes\": null,\n      \"created_by\": 1,\n      \"created_by_name\": \"Store Owner\",\n      \"items\": null,\n      \"created_at\": \"2026-03-01 14:30:00\"\n    }\n  ],\n  \"meta\": {\n    \"page\": 1,\n    \"per_page\": 20,\n    \"total\": 15\n  },\n  \"error\": null\n}"
+              "body": "{\n  \"success\": true,\n  \"data\": [\n    {\n      \"id\": 1,\n      \"store_id\": 1,\n      \"sale_number\": \"INV-00001\",\n      \"sale_date\": \"2026-03-01\",\n      \"entry_mode\": \"pos\",\n      \"customer_id\": null,\n      \"customer_name\": \"Walk-in Customer\",\n      \"payment_method\": \"cash\",\n      \"subtotal\": \"1060.00\",\n      \"tax_amount\": \"0.00\",\n      \"total_amount\": \"1060.00\",\n      \"notes\": null,\n      \"created_by\": 1,\n      \"created_by_name\": \"Store Owner\",\n      \"items\": null,\n      \"created_at\": \"2026-03-01 14:30:00\"\n    }\n  ],\n  \"meta\": {\n    \"page\": 1,\n    \"per_page\": 20,\n    \"total\": 15,\n    \"total_pages\": 1\n  },\n  \"error\": null\n}"
             }
           ]
         },
@@ -415,7 +272,7 @@
               "name": "200 — Sale with items",
               "status": "OK",
               "code": 200,
-              "body": "{\n  \"success\": true,\n  \"data\": {\n    \"id\": 1,\n    \"store_id\": 1,\n    \"sale_number\": \"INV-00001\",\n    \"sale_date\": \"2026-03-01\",\n    \"entry_mode\": \"pos\",\n    \"customer_id\": null,\n    \"customer_name\": \"Walk-in Customer\",\n    \"payment_method\": \"cash\",\n    \"subtotal\": \"1060.00\",\n    \"tax_amount\": \"0.00\",\n    \"total_amount\": \"1060.00\",\n    \"notes\": null,\n    \"created_by\": 1,\n    \"created_by_name\": \"Store Owner\",\n    \"items\": [\n      {\n        \"id\": 1,\n        \"product_id\": 1,\n        \"variant_id\": null,\n        \"product_name_snapshot\": \"Basmati Rice 5kg\",\n        \"sku_snapshot\": \"SKU001\",\n        \"quantity\": \"2\",\n        \"unit_price\": \"450.00\",\n        \"cost_price_snapshot\": \"380.00\",\n        \"line_total\": \"900.00\"\n      },\n      {\n        \"id\": 2,\n        \"product_id\": 2,\n        \"variant_id\": null,\n        \"product_name_snapshot\": \"Toor Dal 1kg\",\n        \"sku_snapshot\": \"SKU002\",\n        \"quantity\": \"1\",\n        \"unit_price\": \"160.00\",\n        \"cost_price_snapshot\": \"130.00\",\n        \"line_total\": \"160.00\"\n      }\n    ],\n    \"created_at\": \"2026-03-01 14:30:00\"\n  },\n  \"meta\": null,\n  \"error\": null\n}"
+              "body": "{\n  \"success\": true,\n  \"data\": {\n    \"id\": 1,\n    \"store_id\": 1,\n    \"sale_number\": \"INV-00001\",\n    \"sale_date\": \"2026-03-01\",\n    \"entry_mode\": \"pos\",\n    \"customer_id\": null,\n    \"customer_name\": \"Walk-in Customer\",\n    \"payment_method\": \"cash\",\n    \"subtotal\": \"1060.00\",\n    \"tax_amount\": \"0.00\",\n    \"total_amount\": \"1060.00\",\n    \"notes\": null,\n    \"created_by\": 1,\n    \"created_by_name\": \"Store Owner\",\n    \"items\": [\n      {\n        \"id\": 1,\n        \"product_id\": 1,\n        \"variant_id\": null,\n        \"product_name_snapshot\": \"Basmati Rice 5kg\",\n        \"sku_snapshot\": \"SKU001\",\n        \"quantity\": \"2\",\n        \"unit_price\": \"450.00\",\n        \"cost_price_snapshot\": \"380.00\",\n        \"line_total\": \"900.00\"\n      }\n    ],\n    \"created_at\": \"2026-03-01 14:30:00\"\n  },\n  \"meta\": null,\n  \"error\": null\n}"
             }
           ]
         }
@@ -432,12 +289,13 @@
               { "key": "Accept", "value": "application/json" }
             ],
             "url": {
-              "raw": "{{base_url}}/customers?page=1&per_page=20",
+              "raw": "{{base_url}}/customers?page=1&per_page=20&search=",
               "host": ["{{base_url}}"],
               "path": ["customers"],
               "query": [
                 { "key": "page", "value": "1" },
-                { "key": "per_page", "value": "20" }
+                { "key": "per_page", "value": "20" },
+                { "key": "search", "value": "", "description": "Search by name or mobile" }
               ]
             }
           },
@@ -446,7 +304,7 @@
               "name": "200 — Customer list",
               "status": "OK",
               "code": 200,
-              "body": "{\n  \"success\": true,\n  \"data\": [\n    {\n      \"id\": 2,\n      \"store_id\": 1,\n      \"name\": \"Ramesh Kumar\",\n      \"mobile\": \"9876543210\",\n      \"email\": \"ramesh@example.com\",\n      \"is_default\": 0,\n      \"outstanding_balance\": \"4500.00\",\n      \"created_at\": \"2026-02-15 09:00:00\"\n    },\n    {\n      \"id\": 3,\n      \"store_id\": 1,\n      \"name\": \"Suresh Patel\",\n      \"mobile\": \"9876543211\",\n      \"email\": null,\n      \"is_default\": 0,\n      \"outstanding_balance\": \"0.00\",\n      \"created_at\": \"2026-02-20 11:00:00\"\n    }\n  ],\n  \"meta\": {\n    \"page\": 1,\n    \"per_page\": 20,\n    \"total\": 12\n  },\n  \"error\": null\n}"
+              "body": "{\n  \"success\": true,\n  \"data\": [\n    {\n      \"id\": 2,\n      \"store_id\": 1,\n      \"name\": \"Ramesh Kumar\",\n      \"mobile\": \"9876543210\",\n      \"email\": \"ramesh@example.com\",\n      \"is_default\": 0,\n      \"outstanding_balance\": \"4500.00\",\n      \"created_at\": \"2026-02-15 09:00:00\"\n    }\n  ],\n  \"meta\": {\n    \"page\": 1,\n    \"per_page\": 20,\n    \"total\": 12,\n    \"total_pages\": 1\n  },\n  \"error\": null\n}"
             }
           ]
         },
@@ -473,13 +331,13 @@
               "name": "201 — Customer created",
               "status": "Created",
               "code": 201,
-              "body": "{\n  \"success\": true,\n  \"data\": {\n    \"id\": 4,\n    \"store_id\": 1,\n    \"name\": \"Priya Sharma\",\n    \"mobile\": \"9876543212\",\n    \"email\": \"priya@example.com\",\n    \"is_default\": 0,\n    \"outstanding_balance\": \"0.00\",\n    \"created_at\": \"2026-03-01 16:00:00\"\n  },\n  \"meta\": null,\n  \"error\": null\n}"
+              "body": "{\n  \"success\": true,\n  \"data\": {\n    \"customer_id\": 4\n  },\n  \"meta\": null,\n  \"error\": null\n}"
             },
             {
               "name": "422 — Validation error",
               "status": "Unprocessable Entity",
               "code": 422,
-              "body": "{\n  \"success\": false,\n  \"data\": null,\n  \"meta\": null,\n  \"error\": \"The name field is required.\"\n}"
+              "body": "{\n  \"success\": false,\n  \"data\": {\n    \"errors\": [\"The name field is required.\"]\n  },\n  \"meta\": null,\n  \"error\": \"The name field is required.\"\n}"
             }
           ]
         },
@@ -501,7 +359,7 @@
               "name": "200 — Credit history",
               "status": "OK",
               "code": 200,
-              "body": "{\n  \"success\": true,\n  \"data\": [\n    {\n      \"id\": 1,\n      \"sale_id\": 2,\n      \"sale_number\": \"INV-00002\",\n      \"amount_due\": \"4500.00\",\n      \"amount_paid\": \"2000.00\",\n      \"balance\": \"2500.00\",\n      \"due_date\": \"2026-04-01\",\n      \"created_at\": \"2026-03-01 15:00:00\"\n    }\n  ],\n  \"meta\": null,\n  \"error\": null\n}"
+              "body": "{\n  \"success\": true,\n  \"data\": {\n    \"customer\": {\n      \"id\": 2,\n      \"store_id\": 1,\n      \"name\": \"Ramesh Kumar\",\n      \"mobile\": \"9876543210\",\n      \"email\": \"ramesh@example.com\",\n      \"is_default\": 0,\n      \"outstanding_balance\": \"4500.00\",\n      \"created_at\": \"2026-02-15 09:00:00\"\n    },\n    \"credits\": [\n      {\n        \"id\": 1,\n        \"sale_id\": 2,\n        \"sale_number\": \"INV-00002\",\n        \"amount_due\": \"4500.00\",\n        \"amount_paid\": \"2000.00\",\n        \"balance\": \"2500.00\",\n        \"due_date\": \"2026-04-01\",\n        \"created_at\": \"2026-03-01 15:00:00\"\n      }\n    ],\n    \"payment_history\": [\n      {\n        \"id\": 1,\n        \"amount\": \"2000.00\",\n        \"payment_method\": \"cash\",\n        \"notes\": \"Partial payment\",\n        \"created_at\": \"2026-03-05 10:00:00\"\n      }\n    ]\n  },\n  \"meta\": null,\n  \"error\": null\n}"
             }
           ]
         },
@@ -525,16 +383,16 @@
           },
           "response": [
             {
-              "name": "200 — Payment recorded",
-              "status": "OK",
-              "code": 200,
-              "body": "{\n  \"success\": true,\n  \"data\": null,\n  \"meta\": null,\n  \"error\": null\n}"
+              "name": "201 — Payment recorded",
+              "status": "Created",
+              "code": 201,
+              "body": "{\n  \"success\": true,\n  \"data\": {\n    \"message\": \"Payment recorded successfully.\"\n  },\n  \"meta\": null,\n  \"error\": null\n}"
             },
             {
               "name": "422 — Invalid amount",
               "status": "Unprocessable Entity",
               "code": 422,
-              "body": "{\n  \"success\": false,\n  \"data\": null,\n  \"meta\": null,\n  \"error\": \"The amount field is required.\"\n}"
+              "body": "{\n  \"success\": false,\n  \"data\": {\n    \"errors\": [\"The amount field is required.\"]\n  },\n  \"meta\": null,\n  \"error\": \"The amount field is required.\"\n}"
             }
           ]
         }
@@ -551,9 +409,9 @@
               { "key": "Accept", "value": "application/json" }
             ],
             "url": {
-              "raw": "{{base_url}}/dashboard/summary",
+              "raw": "{{base_url}}/dashboard",
               "host": ["{{base_url}}"],
-              "path": ["dashboard", "summary"]
+              "path": ["dashboard"]
             }
           },
           "response": [
@@ -561,38 +419,39 @@
               "name": "200 — Dashboard KPIs",
               "status": "OK",
               "code": 200,
-              "body": "{\n  \"success\": true,\n  \"data\": {\n    \"sales_today\": {\n      \"total\": \"15200.00\",\n      \"change_percent\": 12.5\n    },\n    \"sales_this_week\": {\n      \"total\": \"87500.00\",\n      \"change_percent\": -3.2\n    },\n    \"sales_this_month\": {\n      \"total\": \"342000.00\",\n      \"change_percent\": 8.1\n    },\n    \"total_stock_value\": \"1250000.00\",\n    \"out_of_stock_count\": 5,\n    \"low_stock_count\": 12,\n    \"top_products_today\": [\n      {\n        \"id\": 1,\n        \"product_name\": \"Basmati Rice 5kg\",\n        \"units_sold\": 24,\n        \"revenue\": \"10800.00\"\n      },\n      {\n        \"id\": 2,\n        \"product_name\": \"Toor Dal 1kg\",\n        \"units_sold\": 18,\n        \"revenue\": \"2880.00\"\n      },\n      {\n        \"id\": 5,\n        \"product_name\": \"Sunflower Oil 1L\",\n        \"units_sold\": 15,\n        \"revenue\": \"2250.00\"\n      },\n      {\n        \"id\": 8,\n        \"product_name\": \"Atta 10kg\",\n        \"units_sold\": 10,\n        \"revenue\": \"3500.00\"\n      },\n      {\n        \"id\": 12,\n        \"product_name\": \"Sugar 5kg\",\n        \"units_sold\": 8,\n        \"revenue\": \"1520.00\"\n      }\n    ],\n    \"recent_sales\": [\n      {\n        \"id\": 15,\n        \"sale_number\": \"INV-00015\",\n        \"sale_date\": \"2026-03-01\",\n        \"entry_mode\": \"pos\",\n        \"customer_id\": null,\n        \"customer_name\": \"Walk-in Customer\",\n        \"payment_method\": \"upi\",\n        \"subtotal\": \"890.00\",\n        \"tax_amount\": \"0.00\",\n        \"total_amount\": \"890.00\",\n        \"notes\": null,\n        \"created_by\": 1,\n        \"created_by_name\": \"Store Owner\",\n        \"items\": null,\n        \"created_at\": \"2026-03-01 16:45:00\"\n      },\n      {\n        \"id\": 14,\n        \"sale_number\": \"INV-00014\",\n        \"sale_date\": \"2026-03-01\",\n        \"entry_mode\": \"pos\",\n        \"customer_id\": 2,\n        \"customer_name\": \"Ramesh Kumar\",\n        \"payment_method\": \"credit\",\n        \"subtotal\": \"4500.00\",\n        \"tax_amount\": \"0.00\",\n        \"total_amount\": \"4500.00\",\n        \"notes\": null,\n        \"created_by\": 1,\n        \"created_by_name\": \"Store Owner\",\n        \"items\": null,\n        \"created_at\": \"2026-03-01 16:30:00\"\n      }\n    ]\n  },\n  \"meta\": null,\n  \"error\": null\n}"
+              "body": "{\n  \"success\": true,\n  \"data\": {\n    \"today_revenue\": 15200.0,\n    \"yesterday_revenue\": 13500.0,\n    \"percent_change\": 12.6,\n    \"week_revenue\": 87500.0,\n    \"month_revenue\": 342000.0,\n    \"stock_value\": 1250000.0,\n    \"out_of_stock\": 5,\n    \"low_stock\": 12,\n    \"top_products\": [\n      {\n        \"product_name\": \"Basmati Rice 5kg\",\n        \"units_sold\": 24.0,\n        \"revenue\": 10800.0\n      },\n      {\n        \"product_name\": \"Toor Dal 1kg\",\n        \"units_sold\": 18.0,\n        \"revenue\": 2880.0\n      }\n    ],\n    \"recent_sales\": [\n      {\n        \"sale_number\": \"INV-00015\",\n        \"sale_date\": \"2026-03-01\",\n        \"payment_method\": \"upi\",\n        \"total_amount\": 890.0,\n        \"customer_name\": \"Walk-in Customer\"\n      }\n    ],\n    \"sales_trend\": {\n      \"labels\": [\"25 Feb\", \"26 Feb\", \"27 Feb\", \"28 Feb\", \"01 Mar\"],\n      \"amounts\": [12500.0, 15200.0, 8900.0, 18300.0, 15200.0]\n    },\n    \"payment_breakdown\": {\n      \"labels\": [\"Cash\", \"Upi\", \"Card\", \"Credit\"],\n      \"amounts\": [180000.0, 95000.0, 42000.0, 25000.0]\n    },\n    \"stock_distribution\": {\n      \"labels\": [\"In Stock\", \"Low Stock\", \"Out of Stock\"],\n      \"counts\": [83, 12, 5]\n    }\n  },\n  \"meta\": null,\n  \"error\": null\n}"
             }
           ]
         },
         {
-          "name": "Get Sales Trend (Chart Data)",
+          "name": "Get Chart Data",
           "request": {
             "method": "GET",
             "header": [
               { "key": "Accept", "value": "application/json" }
             ],
             "url": {
-              "raw": "{{base_url}}/dashboard/summary?period=week",
+              "raw": "{{base_url}}/dashboard/chart?type=sales_trend&period=week",
               "host": ["{{base_url}}"],
-              "path": ["dashboard", "summary"],
+              "path": ["dashboard", "chart"],
               "query": [
+                { "key": "type", "value": "sales_trend", "description": "sales_trend | payment_breakdown | stock_distribution" },
                 { "key": "period", "value": "week", "description": "day | week | month | year" }
               ]
             }
           },
           "response": [
             {
-              "name": "200 — Weekly trend",
+              "name": "200 — Weekly sales trend",
               "status": "OK",
               "code": 200,
-              "body": "{\n  \"success\": true,\n  \"data\": {\n    \"labels\": [\"Mon\", \"Tue\", \"Wed\", \"Thu\", \"Fri\", \"Sat\", \"Sun\"],\n    \"data\": [12500.0, 15200.0, 8900.0, 18300.0, 22100.0, 31500.0, 15200.0]\n  },\n  \"meta\": null,\n  \"error\": null\n}"
+              "body": "{\n  \"success\": true,\n  \"data\": {\n    \"labels\": [\"25 Feb\", \"26 Feb\", \"27 Feb\", \"28 Feb\", \"01 Mar\", \"02 Mar\", \"03 Mar\"],\n    \"amounts\": [12500.0, 15200.0, 8900.0, 18300.0, 22100.0, 31500.0, 15200.0]\n  },\n  \"meta\": null,\n  \"error\": null\n}"
             },
             {
-              "name": "200 — Monthly trend",
+              "name": "200 — Yearly trend (monthly)",
               "status": "OK",
               "code": 200,
-              "body": "{\n  \"success\": true,\n  \"data\": {\n    \"labels\": [\"Week 1\", \"Week 2\", \"Week 3\", \"Week 4\"],\n    \"data\": [87500.0, 92300.0, 78100.0, 84100.0]\n  },\n  \"meta\": null,\n  \"error\": null\n}"
+              "body": "{\n  \"success\": true,\n  \"data\": {\n    \"labels\": [\"Jan\", \"Feb\", \"Mar\"],\n    \"amounts\": [285000.0, 312000.0, 342000.0]\n  },\n  \"meta\": null,\n  \"error\": null\n}"
             }
           ]
         }

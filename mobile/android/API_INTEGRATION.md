@@ -79,17 +79,16 @@ data class ApiResponse<T>(
 |--------|------|----------------------|---------------------|-------|
 | GET | `products` | `?page, per_page, search, category_id, status` | `List<Product>` | Paginated, filterable |
 | GET | `products/{id}` | — | `Product` | Includes variants if present |
-| POST | `products` | `CreateProductRequest` | `Product` | SKU auto-uppercased server-side |
-| PUT | `products/{id}` | `CreateProductRequest` | `Product` | Requires `version` for optimistic lock |
-| DELETE | `products/{id}` | — | `Unit` | |
-| GET | `products/{id}/variants` | — | `List<ProductVariant>` | |
+| POST | `products` | `CreateProductRequest` | `{product_id: int}` | SKU auto-uppercased server-side |
+| PUT | `products/{id}` | `CreateProductRequest` + `version` | `{message: string}` | Requires `version` for optimistic lock, returns 409 on conflict |
+| DELETE | `products/{id}` | — | `{message: string}` | Soft-delete (sets status to inactive) |
 
 ### Sales
 
 | Method | Path | Request Body / Params | Response `data` Type | Notes |
 |--------|------|----------------------|---------------------|-------|
-| POST | `sales` | `CreateSaleRequest` | `Sale` | Atomic: insert sale + decrement stock |
-| GET | `sales` | `?page, per_page, from, to` | `List<Sale>` | Date-filterable, paginated |
+| POST | `sales` | `CreateSaleRequest` | `CreateSaleResponse {sale_id}` | Atomic: insert sale + decrement stock |
+| GET | `sales` | `?page, per_page, search, from, to, payment_method` | `List<Sale>` | Date-filterable, paginated |
 | GET | `sales/{id}` | — | `Sale` | Includes line items |
 
 ### Customers
@@ -97,15 +96,16 @@ data class ApiResponse<T>(
 | Method | Path | Request Body / Params | Response `data` Type | Notes |
 |--------|------|----------------------|---------------------|-------|
 | GET | `customers` | `?page, per_page, search` | `List<Customer>` | Walk-in Customer (is_default=1) included |
-| POST | `customers` | `CreateCustomerRequest(name, mobile?, email?)` | `Customer` | |
-| GET | `customers/{id}/credits` | — | `List<CustomerCredit>` | Credit history for one customer |
-| POST | `customers/{id}/payments` | `RecordPaymentRequest(amount, payment_method, notes?)` | `Unit` | Partial payments supported |
+| POST | `customers` | `CreateCustomerRequest(name, mobile?, email?)` | `{customer_id: int}` | |
+| GET | `customers/{id}/credits` | — | `{customer, credits, payment_history}` | Full credit detail for one customer |
+| POST | `customers/{id}/payments` | `RecordPaymentRequest(amount, payment_method, notes?)` | `{message: string}` | Partial payments supported |
 
 ### Dashboard
 
 | Method | Path | Request Body / Params | Response `data` Type | Notes |
 |--------|------|----------------------|---------------------|-------|
-| GET | `dashboard/summary` | — | `DashboardSummary` | KPIs, top products, recent sales, sales trend |
+| GET | `dashboard` | — | `DashboardSummary` | KPIs, top products, recent sales, trends, payment breakdown, stock distribution |
+| GET | `dashboard/chart` | `?type=sales_trend&period=week` | `ChartData {labels, amounts}` | Types: sales_trend, payment_breakdown, stock_distribution |
 
 ---
 
@@ -215,14 +215,15 @@ data/
       ApiResponse.kt               -- Standard envelope + Meta
       AuthModels.kt                -- LoginRequest, RefreshRequest, AuthData, UserInfo
       ProductModels.kt             -- Product, ProductVariant, CreateProductRequest
-      SaleModels.kt                -- Sale, SaleItem, CreateSaleRequest
+      SaleModels.kt                -- Sale, SaleItem, CreateSaleRequest, CreateSaleResponse
       CustomerModels.kt            -- Customer, CustomerCredit, RecordPaymentRequest
-      DashboardModels.kt           -- DashboardSummary, TopProduct, SalesTrend
+      DashboardModels.kt           -- DashboardSummary, TopProduct, RecentSale, ChartData, StockDistribution
   local/
     TokenStore.kt                  -- EncryptedSharedPreferences wrapper
 
 di/
   NetworkModule.kt                 -- Hilt: OkHttpClient, Retrofit, ApiService providers
+  AppModule.kt                     -- Hilt: Binds TokenStore interface to TokenStoreImpl
 
 ui/
   components/

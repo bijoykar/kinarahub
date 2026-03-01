@@ -51,6 +51,7 @@ $router->post('/setup', 'StoreController@saveSetup', [AuthMiddleware::class, Csr
 // ---------------------------------------------------------------------------
 
 $router->get('/dashboard', 'DashboardController@index', [AuthMiddleware::class]);
+$router->get('/dashboard/chart-data', 'DashboardController@chartData', [AuthMiddleware::class]);
 
 // ---------------------------------------------------------------------------
 // Settings / RBAC routes — Phase 4: Roles & Staff management
@@ -95,3 +96,26 @@ $router->get('/sales', 'SaleController@index', [AuthMiddleware::class, new Permi
 $router->get('/sales/bookkeeping', 'SaleController@bookkeeping', [AuthMiddleware::class, new PermissionMiddleware('sales', 'create')]);
 $router->get('/sales/:id', 'SaleController@show', [AuthMiddleware::class, new PermissionMiddleware('sales', 'read')]);
 $router->post('/sales', 'SaleController@store', [AuthMiddleware::class, CsrfMiddleware::class, new PermissionMiddleware('sales', 'create')]);
+
+// ---------------------------------------------------------------------------
+// Customer routes — Phase 7: Customer & Credit Management
+// ---------------------------------------------------------------------------
+
+$router->get('/customers', 'CustomerController@index', [AuthMiddleware::class, new PermissionMiddleware('customers', 'read')]);
+$router->post('/customers', 'CustomerController@store', [AuthMiddleware::class, CsrfMiddleware::class, new PermissionMiddleware('customers', 'create')]);
+$router->get('/customers/:id', 'CustomerController@show', [AuthMiddleware::class, new PermissionMiddleware('customers', 'read')]);
+$router->post('/customers/:id/payments', 'CustomerController@recordPayment', [AuthMiddleware::class, CsrfMiddleware::class, new PermissionMiddleware('customers', 'create')]);
+
+// ---------------------------------------------------------------------------
+// Report routes — Phase 9: Reports & Exports
+// ---------------------------------------------------------------------------
+
+$router->get('/reports', 'ReportController@index', [AuthMiddleware::class, new PermissionMiddleware('reports', 'read')]);
+$router->get('/reports/top-sellers', 'ReportController@topSellers', [AuthMiddleware::class, new PermissionMiddleware('reports', 'read')]);
+$router->get('/reports/top-sellers/export/csv', 'ReportController@topSellersCsv', [AuthMiddleware::class, new PermissionMiddleware('reports', 'read')]);
+$router->get('/reports/aging', 'ReportController@aging', [AuthMiddleware::class, new PermissionMiddleware('reports', 'read')]);
+$router->get('/reports/pnl', 'ReportController@pnl', [AuthMiddleware::class, new PermissionMiddleware('reports', 'read')]);
+$router->get('/reports/customer-dues', 'ReportController@customerDues', [AuthMiddleware::class, new PermissionMiddleware('reports', 'read')]);
+$router->get('/reports/customer-dues/export/csv', 'ReportController@customerDuesCsv', [AuthMiddleware::class, new PermissionMiddleware('reports', 'read')]);
+$router->get('/reports/gst', 'ReportController@gst', [AuthMiddleware::class, new PermissionMiddleware('reports', 'read')]);
+$router->get('/reports/gst/export/csv', 'ReportController@gstCsv', [AuthMiddleware::class, new PermissionMiddleware('reports', 'read')]);

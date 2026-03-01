@@ -99,7 +99,9 @@ final class AuthViewModelTests: XCTestCase {
                 data: LoginResponse(
                     accessToken: "test_access_token_abc",
                     refreshToken: "test_refresh_token_xyz",
-                    expiresIn: 900
+                    tokenType: "Bearer",
+                    expiresIn: 900,
+                    user: nil
                 ),
                 meta: nil,
                 error: nil
@@ -190,7 +192,7 @@ final class InventoryViewModelTests: XCTestCase {
         let product = Product(
             id: 1, storeId: 1, sku: "SKU001", name: "Test Product",
             categoryId: nil, categoryName: nil, uomId: nil, uomName: nil,
-            uomAbbreviation: nil, sellingPrice: "100.00", costPrice: "80.00",
+            uomAbbr: nil, sellingPrice: "100.00", costPrice: "80.00",
             stockQuantity: "0.000", reorderPoint: "5.000",
             status: "active", version: 0, variants: nil,
             createdAt: nil, updatedAt: nil
@@ -204,7 +206,7 @@ final class InventoryViewModelTests: XCTestCase {
         let product = Product(
             id: 2, storeId: 1, sku: "SKU002", name: "Low Stock Product",
             categoryId: nil, categoryName: nil, uomId: nil, uomName: nil,
-            uomAbbreviation: nil, sellingPrice: "50.00", costPrice: "40.00",
+            uomAbbr: nil, sellingPrice: "50.00", costPrice: "40.00",
             stockQuantity: "5.000", reorderPoint: "5.000",
             status: "active", version: 0, variants: nil,
             createdAt: nil, updatedAt: nil
@@ -218,7 +220,7 @@ final class InventoryViewModelTests: XCTestCase {
         let product = Product(
             id: 3, storeId: 1, sku: "SKU003", name: "Very Low Stock",
             categoryId: nil, categoryName: nil, uomId: nil, uomName: nil,
-            uomAbbreviation: nil, sellingPrice: "200.00", costPrice: "150.00",
+            uomAbbr: nil, sellingPrice: "200.00", costPrice: "150.00",
             stockQuantity: "2.000", reorderPoint: "10.000",
             status: "active", version: 0, variants: nil,
             createdAt: nil, updatedAt: nil
@@ -232,7 +234,7 @@ final class InventoryViewModelTests: XCTestCase {
         let product = Product(
             id: 4, storeId: 1, sku: "SKU004", name: "Well Stocked",
             categoryId: nil, categoryName: nil, uomId: nil, uomName: nil,
-            uomAbbreviation: nil, sellingPrice: "300.00", costPrice: "250.00",
+            uomAbbr: nil, sellingPrice: "300.00", costPrice: "250.00",
             stockQuantity: "50.000", reorderPoint: "10.000",
             status: "active", version: 0, variants: nil,
             createdAt: nil, updatedAt: nil
@@ -246,7 +248,7 @@ final class InventoryViewModelTests: XCTestCase {
         let product = Product(
             id: 5, storeId: 1, sku: "SKU005", name: "Fractional Stock",
             categoryId: nil, categoryName: nil, uomId: nil, uomName: nil,
-            uomAbbreviation: nil, sellingPrice: "100.00", costPrice: "80.00",
+            uomAbbr: nil, sellingPrice: "100.00", costPrice: "80.00",
             stockQuantity: "0.500", reorderPoint: "1.000",
             status: "active", version: 0, variants: nil,
             createdAt: nil, updatedAt: nil
@@ -291,14 +293,14 @@ final class InventoryViewModelTests: XCTestCase {
                     Product(
                         id: 1, storeId: 1, sku: "SKU001", name: "Rice",
                         categoryId: 1, categoryName: "Grains", uomId: 1,
-                        uomName: "Kg", uomAbbreviation: "Kg",
+                        uomName: "Kg", uomAbbr: "Kg",
                         sellingPrice: "450.00", costPrice: "380.00",
                         stockQuantity: "25.000", reorderPoint: "5.000",
                         status: "active", version: 1, variants: nil,
                         createdAt: nil, updatedAt: nil
                     )
                 ],
-                meta: Meta(page: 1, perPage: 20, total: 1),
+                meta: Meta(page: 1, perPage: 20, total: 1, totalPages: 1),
                 error: nil
             )
             return response
@@ -326,7 +328,7 @@ final class SalesViewModelTests: XCTestCase {
         let product = Product(
             id: 1, storeId: 1, sku: "SKU001", name: "Rice",
             categoryId: nil, categoryName: nil, uomId: nil,
-            uomName: nil, uomAbbreviation: nil,
+            uomName: nil, uomAbbr: nil,
             sellingPrice: "450.00", costPrice: "380.00",
             stockQuantity: "25.000", reorderPoint: "5.000",
             status: "active", version: 1, variants: nil,
@@ -362,7 +364,7 @@ final class SalesViewModelTests: XCTestCase {
         let product1 = Product(
             id: 1, storeId: 1, sku: "SKU001", name: "Rice 5kg",
             categoryId: nil, categoryName: nil, uomId: nil,
-            uomName: nil, uomAbbreviation: nil,
+            uomName: nil, uomAbbr: nil,
             sellingPrice: "450.00", costPrice: nil,
             stockQuantity: "100.000", reorderPoint: "10.000",
             status: "active", version: 0, variants: nil,
@@ -372,7 +374,7 @@ final class SalesViewModelTests: XCTestCase {
         let product2 = Product(
             id: 2, storeId: 1, sku: "SKU002", name: "Dal 1kg",
             categoryId: nil, categoryName: nil, uomId: nil,
-            uomName: nil, uomAbbreviation: nil,
+            uomName: nil, uomAbbr: nil,
             sellingPrice: "160.00", costPrice: nil,
             stockQuantity: "50.000", reorderPoint: "5.000",
             status: "active", version: 0, variants: nil,
@@ -382,7 +384,7 @@ final class SalesViewModelTests: XCTestCase {
         let product3 = Product(
             id: 3, storeId: 1, sku: "SKU003", name: "Sugar 1kg",
             categoryId: nil, categoryName: nil, uomId: nil,
-            uomName: nil, uomAbbreviation: nil,
+            uomName: nil, uomAbbr: nil,
             sellingPrice: "55.00", costPrice: nil,
             stockQuantity: "200.000", reorderPoint: "20.000",
             status: "active", version: 0, variants: nil,
@@ -408,7 +410,7 @@ final class SalesViewModelTests: XCTestCase {
         let product = Product(
             id: 1, storeId: 1, sku: "SKU001", name: "Rice",
             categoryId: nil, categoryName: nil, uomId: nil,
-            uomName: nil, uomAbbreviation: nil,
+            uomName: nil, uomAbbr: nil,
             sellingPrice: "450.00", costPrice: nil,
             stockQuantity: "100.000", reorderPoint: "10.000",
             status: "active", version: 0, variants: nil,
@@ -430,7 +432,7 @@ final class SalesViewModelTests: XCTestCase {
         let product = Product(
             id: 1, storeId: 1, sku: "SKU001", name: "Rice",
             categoryId: nil, categoryName: nil, uomId: nil,
-            uomName: nil, uomAbbreviation: nil,
+            uomName: nil, uomAbbr: nil,
             sellingPrice: "450.00", costPrice: nil,
             stockQuantity: "25.000", reorderPoint: "5.000",
             status: "active", version: 1, variants: nil,
@@ -458,7 +460,7 @@ final class SalesViewModelTests: XCTestCase {
         let product = Product(
             id: 1, storeId: 1, sku: "SKU001", name: "Rice",
             categoryId: nil, categoryName: nil, uomId: nil,
-            uomName: nil, uomAbbreviation: nil,
+            uomName: nil, uomAbbr: nil,
             sellingPrice: "450.00", costPrice: nil,
             stockQuantity: "100.000", reorderPoint: "10.000",
             status: "active", version: 0, variants: nil,
@@ -480,7 +482,7 @@ final class SalesViewModelTests: XCTestCase {
         let product = Product(
             id: 1, storeId: 1, sku: "SKU001", name: "Rice",
             categoryId: nil, categoryName: nil, uomId: nil,
-            uomName: nil, uomAbbreviation: nil,
+            uomName: nil, uomAbbr: nil,
             sellingPrice: "450.00", costPrice: nil,
             stockQuantity: "100.000", reorderPoint: "10.000",
             status: "active", version: 0, variants: nil,
@@ -500,7 +502,7 @@ final class SalesViewModelTests: XCTestCase {
         let product = Product(
             id: 1, storeId: 1, sku: "SKU001", name: "Rice",
             categoryId: nil, categoryName: nil, uomId: nil,
-            uomName: nil, uomAbbreviation: nil,
+            uomName: nil, uomAbbr: nil,
             sellingPrice: "450.00", costPrice: nil,
             stockQuantity: "100.000", reorderPoint: "10.000",
             status: "active", version: 0, variants: nil,
@@ -591,7 +593,7 @@ final class CustomerViewModelTests: XCTestCase {
                         createdAt: nil
                     )
                 ],
-                meta: Meta(page: 1, perPage: 20, total: 1),
+                meta: Meta(page: 1, perPage: 20, total: 1, totalPages: 1),
                 error: nil
             )
             return response
@@ -635,26 +637,39 @@ final class CustomerViewModelTests: XCTestCase {
 
         vm.newCustomerName = ""
 
-        let customer = await vm.createCustomer()
+        let success = await vm.createCustomer()
 
-        XCTAssertNil(customer)
+        XCTAssertFalse(success)
         XCTAssertEqual(vm.errorMessage, "Customer name is required.")
     }
 
-    func testCreateCustomer_Success_AddsToList() async {
+    func testCreateCustomer_Success_ClearsFormAndRefreshes() async {
         let mockAPI = MockAPIClient()
         let vm = CustomerViewModel(apiClient: mockAPI)
 
         mockAPI.postHandler = { _, _ in
-            let response: APIResponse<Customer> = APIResponse(
+            let response: APIResponse<CreateCustomerResponse> = APIResponse(
                 success: true,
-                data: Customer(
-                    id: 5, storeId: 1, name: "Priya Sharma",
-                    mobile: "9876543212", email: "priya@example.com",
-                    isDefault: 0, outstandingBalance: "0.00",
-                    createdAt: "2026-03-01 16:00:00"
-                ),
+                data: CreateCustomerResponse(customerId: 5),
                 meta: nil,
+                error: nil
+            )
+            return response
+        }
+
+        // After create, refresh will be called (GET /customers)
+        mockAPI.getHandler = { _, _ in
+            let response: APIResponse<[Customer]> = APIResponse(
+                success: true,
+                data: [
+                    Customer(
+                        id: 5, storeId: 1, name: "Priya Sharma",
+                        mobile: "9876543212", email: "priya@example.com",
+                        isDefault: 0, outstandingBalance: "0.00",
+                        createdAt: "2026-03-01 16:00:00"
+                    )
+                ],
+                meta: Meta(page: 1, perPage: 20, total: 1, totalPages: 1),
                 error: nil
             )
             return response
@@ -664,12 +679,11 @@ final class CustomerViewModelTests: XCTestCase {
         vm.newCustomerMobile = "9876543212"
         vm.newCustomerEmail = "priya@example.com"
 
-        let customer = await vm.createCustomer()
+        let success = await vm.createCustomer()
 
-        XCTAssertNotNil(customer)
-        XCTAssertEqual(customer?.name, "Priya Sharma")
-        XCTAssertEqual(vm.customers.count, 1, "Customer should be added to list")
-        XCTAssertEqual(vm.customers[0].id, 5)
+        XCTAssertTrue(success)
+        XCTAssertEqual(vm.customers.count, 1, "Customer should appear after refresh")
+        XCTAssertEqual(vm.customers[0].name, "Priya Sharma")
         XCTAssertEqual(vm.newCustomerName, "", "Form fields should be cleared")
         XCTAssertEqual(vm.newCustomerMobile, "")
         XCTAssertEqual(vm.newCustomerEmail, "")
@@ -756,7 +770,7 @@ final class ModelDecodingTests: XCTestCase {
         {
             "success": true,
             "data": [],
-            "meta": { "page": 2, "per_page": 20, "total": 48 },
+            "meta": { "page": 2, "per_page": 20, "total": 48, "total_pages": 3 },
             "error": null
         }
         """
@@ -764,19 +778,20 @@ final class ModelDecodingTests: XCTestCase {
         XCTAssertEqual(response.meta?.page, 2)
         XCTAssertEqual(response.meta?.perPage, 20)
         XCTAssertEqual(response.meta?.total, 48)
+        XCTAssertEqual(response.meta?.totalPages, 3)
     }
 
     func testSalesTrendResponse_DecodesCorrectly() {
         let json = """
         {
             "labels": ["Mon", "Tue", "Wed"],
-            "data": [12500.0, 15200.0, 8900.0]
+            "amounts": [12500.0, 15200.0, 8900.0]
         }
         """
         let response: SalesTrendResponse = decodeJSON(json)
         XCTAssertEqual(response.labels.count, 3)
-        XCTAssertEqual(response.data.count, 3)
+        XCTAssertEqual(response.amounts.count, 3)
         XCTAssertEqual(response.labels[0], "Mon")
-        XCTAssertEqual(response.data[1], 15200.0)
+        XCTAssertEqual(response.amounts[1], 15200.0)
     }
 }

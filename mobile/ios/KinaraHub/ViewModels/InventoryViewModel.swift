@@ -38,7 +38,7 @@ final class InventoryViewModel: ObservableObject {
         ]
 
         if let category = selectedCategory, !category.isEmpty {
-            params["category"] = category
+            params["category_id"] = category
         }
 
         if !searchText.isEmpty {
@@ -58,9 +58,8 @@ final class InventoryViewModel: ObservableObject {
             if let meta = response.meta {
                 currentPage = meta.page
                 totalProducts = meta.total
-                totalPages = meta.total > 0
-                    ? Int(ceil(Double(meta.total) / Double(meta.perPage)))
-                    : 1
+                totalPages = meta.totalPages
+                    ?? (meta.total > 0 ? Int(ceil(Double(meta.total) / Double(meta.perPage))) : 1)
             }
         } catch let error as APIError {
             errorMessage = error.errorDescription

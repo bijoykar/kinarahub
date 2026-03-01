@@ -26,6 +26,20 @@ header('X-Content-Type-Options: nosniff');
 header('Cache-Control: no-store, no-cache, must-revalidate');
 
 // ---------------------------------------------------------------------------
+// CORS headers for mobile app and cross-origin access.
+// ---------------------------------------------------------------------------
+header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Methods: GET, POST, PUT, PATCH, DELETE, OPTIONS');
+header('Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With, X-HTTP-Method-Override');
+header('Access-Control-Max-Age: 86400');
+
+// Handle CORS preflight.
+if (($_SERVER['REQUEST_METHOD'] ?? '') === 'OPTIONS') {
+    http_response_code(204);
+    exit;
+}
+
+// ---------------------------------------------------------------------------
 // 1. Composer autoloader
 // ---------------------------------------------------------------------------
 $autoloader = dirname(__DIR__, 2) . '/vendor/autoload.php';
@@ -97,7 +111,24 @@ require_once dirname(__DIR__, 2) . '/config/api_routes.php';
 //    The exception handler above also catches errors that escape this block.
 // ---------------------------------------------------------------------------
 try {
+    // Buffer output so we can intercept HTML 404 from the Router
+    // and replace it with a JSON 404 response.
+    ob_start();
     $router->dispatch($request);
+    $output = ob_get_clean();
+
+    // If the Router returned an HTML 404 (no route matched), override with JSON.
+    if (http_response_code() === 404 && !str_starts_with(trim($output), '{')) {
+        header('Content-Type: application/json; charset=UTF-8');
+        echo json_encode([
+            'success' => false,
+            'data'    => null,
+            'meta'    => null,
+            'error'   => 'Endpoint not found.',
+        ], JSON_UNESCAPED_UNICODE);
+    } else {
+        echo $output;
+    }
 } catch (Throwable $e) {
     // Log and return JSON 500.
     error_log(sprintf(

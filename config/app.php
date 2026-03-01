@@ -63,6 +63,15 @@ define('CURRENCY_SYMBOL', '₹');
 /** Default number of records returned per paginated page. */
 define('PER_PAGE', 25);
 
+/** JWT signing secret from .env. */
+define('JWT_SECRET', $_ENV['JWT_SECRET'] ?? '');
+
+/** JWT access token lifetime in seconds (15 minutes). */
+define('JWT_ACCESS_TTL', (int) ($_ENV['JWT_ACCESS_TTL'] ?? 900));
+
+/** JWT refresh token lifetime in seconds (30 days). */
+define('JWT_REFRESH_TTL', (int) ($_ENV['JWT_REFRESH_TTL'] ?? 2592000));
+
 /** Canonical public URL of the application (no trailing slash). */
 define('APP_URL', rtrim($_ENV['APP_URL'] ?? 'http://localhost/kinarahub', '/'));
 

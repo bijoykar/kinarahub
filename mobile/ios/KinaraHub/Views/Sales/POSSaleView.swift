@@ -33,9 +33,7 @@ struct POSSaleView: View {
             .alert("Sale Created", isPresented: $viewModel.showSaleSuccess) {
                 Button("OK", role: .cancel) {}
             } message: {
-                if let sale = viewModel.lastCreatedSale {
-                    Text("Sale \(sale.saleNumber) created successfully.")
-                }
+                Text("Sale created successfully.")
             }
             .sheet(isPresented: $showCustomerPicker) {
                 customerPickerSheet

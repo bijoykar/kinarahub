@@ -5,12 +5,14 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Core\Database;
+use App\Core\TenantScope;
 use PDO;
 
 /**
  * SaleModel — Database queries for sales and sale_items.
  *
- * All queries use PDO prepared statements. Tenant-scoped via store_id parameter.
+ * All queries use PDO prepared statements.
+ * Tenant-scoped via TenantScope::appendWhere() and TenantScope::apply().
  */
 class SaleModel
 {
@@ -31,10 +33,12 @@ class SaleModel
      */
     public function generateSaleNumber(int $storeId): string
     {
-        $stmt = $this->pdo->prepare(
-            'SELECT sale_number FROM sales WHERE store_id = ? ORDER BY id DESC LIMIT 1'
-        );
-        $stmt->execute([$storeId]);
+        $sql = 'SELECT sale_number FROM sales WHERE store_id = ? ORDER BY id DESC LIMIT 1 FOR UPDATE';
+        $params = [];
+        TenantScope::apply($params, $storeId);
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute($params);
         $lastNumber = $stmt->fetchColumn();
 
         if ($lastNumber === false) {
@@ -117,8 +121,8 @@ class SaleModel
      */
     public function listPaginated(int $storeId, int $page, int $perPage, string $search = '', string $from = '', string $to = '', string $paymentMethod = ''): array
     {
-        $where = ['s.store_id = ?'];
-        $params = [$storeId];
+        $where = [];
+        $params = [];
 
         if ($search !== '') {
             $where[] = '(s.sale_number LIKE ? OR c.name LIKE ?)';
@@ -141,15 +145,20 @@ class SaleModel
             $params[] = $paymentMethod;
         }
 
-        $whereClause = implode(' AND ', $where);
+        // Build base WHERE clause from filters, then append tenant scope.
+        $filterClause = !empty($where) ? implode(' AND ', $where) : '1=1';
 
         // Count total.
         $countSql = "SELECT COUNT(*)
                      FROM sales s
                      LEFT JOIN customers c ON c.id = s.customer_id
-                     WHERE {$whereClause}";
+                     WHERE {$filterClause}";
+        $countSql = TenantScope::appendWhere($countSql, 's');
+        $countParams = $params;
+        TenantScope::apply($countParams, $storeId);
+
         $stmt = $this->pdo->prepare($countSql);
-        $stmt->execute($params);
+        $stmt->execute($countParams);
         $total = (int) $stmt->fetchColumn();
 
         // Fetch paginated results.
@@ -158,15 +167,17 @@ class SaleModel
                 FROM sales s
                 LEFT JOIN customers c ON c.id = s.customer_id
                 LEFT JOIN staff st ON st.id = s.created_by
-                WHERE {$whereClause}
-                ORDER BY s.created_at DESC
-                LIMIT ? OFFSET ?";
+                WHERE {$filterClause}";
+        $sql = TenantScope::appendWhere($sql, 's');
+        $sql .= ' ORDER BY s.created_at DESC LIMIT ? OFFSET ?';
 
-        $params[] = $perPage;
-        $params[] = $offset;
+        $fetchParams = $params;
+        TenantScope::apply($fetchParams, $storeId);
+        $fetchParams[] = $perPage;
+        $fetchParams[] = $offset;
 
         $stmt = $this->pdo->prepare($sql);
-        $stmt->execute($params);
+        $stmt->execute($fetchParams);
         $sales = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         return ['sales' => $sales, 'total' => $total];
@@ -183,11 +194,14 @@ class SaleModel
                 FROM sales s
                 LEFT JOIN customers c ON c.id = s.customer_id
                 LEFT JOIN staff st ON st.id = s.created_by
-                WHERE s.id = ? AND s.store_id = ?
-                LIMIT 1';
+                WHERE s.id = ?';
+        $params = [$id];
+        $sql = TenantScope::appendWhere($sql, 's');
+        TenantScope::apply($params, $storeId);
+        $sql .= ' LIMIT 1';
 
         $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([$id, $storeId]);
+        $stmt->execute($params);
         $sale = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if ($sale === false) {
@@ -195,9 +209,14 @@ class SaleModel
         }
 
         // Fetch sale items.
-        $itemsSql = 'SELECT * FROM sale_items WHERE sale_id = ? AND store_id = ? ORDER BY id ASC';
+        $itemsSql = 'SELECT * FROM sale_items WHERE sale_id = ?';
+        $itemsParams = [$id];
+        $itemsSql = TenantScope::appendWhere($itemsSql);
+        TenantScope::apply($itemsParams, $storeId);
+        $itemsSql .= ' ORDER BY id ASC';
+
         $itemsStmt = $this->pdo->prepare($itemsSql);
-        $itemsStmt->execute([$id, $storeId]);
+        $itemsStmt->execute($itemsParams);
         $sale['items'] = $itemsStmt->fetchAll(PDO::FETCH_ASSOC);
 
         return $sale;
@@ -219,10 +238,13 @@ class SaleModel
         $stmt->execute([$storeId, $customerId, $saleId, $amount, $amount]);
 
         // Update customer's outstanding balance.
-        $stmt = $this->pdo->prepare(
-            'UPDATE customers SET outstanding_balance = outstanding_balance + ? WHERE id = ? AND store_id = ?'
-        );
-        $stmt->execute([$amount, $customerId, $storeId]);
+        $sql = 'UPDATE customers SET outstanding_balance = outstanding_balance + ? WHERE id = ?';
+        $params = [$amount, $customerId];
+        $sql = TenantScope::appendWhere($sql);
+        TenantScope::apply($params, $storeId);
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute($params);
     }
 
     // -----------------------------------------------------------------------
@@ -236,10 +258,14 @@ class SaleModel
      */
     public function getDefaultCustomerId(int $storeId): ?int
     {
-        $stmt = $this->pdo->prepare(
-            'SELECT id FROM customers WHERE store_id = ? AND is_default = 1 LIMIT 1'
-        );
-        $stmt->execute([$storeId]);
+        $sql = 'SELECT id FROM customers WHERE is_default = 1';
+        $params = [];
+        $sql = TenantScope::appendWhere($sql);
+        TenantScope::apply($params, $storeId);
+        $sql .= ' LIMIT 1';
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute($params);
         $id = $stmt->fetchColumn();
 
         return $id !== false ? (int) $id : null;
@@ -252,10 +278,14 @@ class SaleModel
      */
     public function listCustomers(int $storeId): array
     {
-        $stmt = $this->pdo->prepare(
-            'SELECT id, name, mobile FROM customers WHERE store_id = ? ORDER BY is_default DESC, name ASC'
-        );
-        $stmt->execute([$storeId]);
+        $sql = 'SELECT id, name, mobile FROM customers WHERE 1=1';
+        $params = [];
+        $sql = TenantScope::appendWhere($sql);
+        TenantScope::apply($params, $storeId);
+        $sql .= ' ORDER BY is_default DESC, name ASC';
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute($params);
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }

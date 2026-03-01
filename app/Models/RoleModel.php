@@ -34,12 +34,14 @@ class RoleModel
         $sql = 'SELECT r.id, r.name, r.description, r.is_owner,
                        (SELECT COUNT(*) FROM role_permissions rp WHERE rp.role_id = r.id AND rp.allowed = 1) AS permission_count,
                        (SELECT COUNT(*) FROM staff s WHERE s.role_id = r.id AND s.store_id = r.store_id) AS staff_count
-                FROM roles r
-                WHERE r.store_id = ?
-                ORDER BY r.is_owner DESC, r.name ASC';
+                FROM roles r';
+        $params = [];
+        $sql = TenantScope::appendWhere($sql, 'r');
+        TenantScope::apply($params, $storeId);
+        $sql .= ' ORDER BY r.is_owner DESC, r.name ASC';
 
         $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([$storeId]);
+        $stmt->execute($params);
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
@@ -51,9 +53,14 @@ class RoleModel
      */
     public function findById(int $roleId, int $storeId): ?array
     {
-        $sql = 'SELECT * FROM roles WHERE id = ? AND store_id = ? LIMIT 1';
+        $sql = 'SELECT * FROM roles WHERE id = ?';
+        $params = [$roleId];
+        $sql = TenantScope::appendWhere($sql);
+        TenantScope::apply($params, $storeId);
+        $sql .= ' LIMIT 1';
+
         $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([$roleId, $storeId]);
+        $stmt->execute($params);
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
         return $row !== false ? $row : null;
@@ -79,10 +86,13 @@ class RoleModel
      */
     public function update(int $roleId, int $storeId, string $name, string $description = ''): void
     {
-        $stmt = $this->pdo->prepare(
-            'UPDATE roles SET name = ?, description = ? WHERE id = ? AND store_id = ?'
-        );
-        $stmt->execute([$name, $description, $roleId, $storeId]);
+        $sql = 'UPDATE roles SET name = ?, description = ? WHERE id = ?';
+        $params = [$name, $description, $roleId];
+        $sql = TenantScope::appendWhere($sql);
+        TenantScope::apply($params, $storeId);
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute($params);
     }
 
     /**
@@ -106,7 +116,11 @@ class RoleModel
         // Delete permissions and field restrictions first.
         $this->pdo->prepare('DELETE FROM role_field_restrictions WHERE role_id = ?')->execute([$roleId]);
         $this->pdo->prepare('DELETE FROM role_permissions WHERE role_id = ?')->execute([$roleId]);
-        $this->pdo->prepare('DELETE FROM roles WHERE id = ? AND store_id = ?')->execute([$roleId, $storeId]);
+        $delSql = 'DELETE FROM roles WHERE id = ?';
+        $delParams = [$roleId];
+        $delSql = TenantScope::appendWhere($delSql);
+        TenantScope::apply($delParams, $storeId);
+        $this->pdo->prepare($delSql)->execute($delParams);
 
         return true;
     }
@@ -218,10 +232,13 @@ class RoleModel
      */
     public function getStaffCount(int $roleId, int $storeId): int
     {
-        $stmt = $this->pdo->prepare(
-            'SELECT COUNT(*) FROM staff WHERE role_id = ? AND store_id = ?'
-        );
-        $stmt->execute([$roleId, $storeId]);
+        $sql = 'SELECT COUNT(*) FROM staff WHERE role_id = ?';
+        $params = [$roleId];
+        $sql = TenantScope::appendWhere($sql);
+        TenantScope::apply($params, $storeId);
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute($params);
 
         return (int) $stmt->fetchColumn();
     }

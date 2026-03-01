@@ -39,8 +39,8 @@ struct DashboardView: View {
                     )
 
                     // Top Products Today
-                    if !summary.topProductsToday.isEmpty {
-                        topProductsSection(summary.topProductsToday)
+                    if !summary.topProducts.isEmpty {
+                        topProductsSection(summary.topProducts)
                     }
 
                     // Recent Sales
@@ -88,31 +88,31 @@ struct DashboardView: View {
         ], spacing: 12) {
             KPICard(
                 title: "Sales Today",
-                value: formatCurrency(summary.salesToday.total),
-                changePercent: summary.salesToday.changePercent,
+                value: formatCurrency(summary.todayRevenue),
+                changePercent: summary.percentChange,
                 icon: "indianrupeesign.circle.fill",
                 color: .indigo
             )
 
             KPICard(
                 title: "This Week",
-                value: formatCurrency(summary.salesThisWeek.total),
-                changePercent: summary.salesThisWeek.changePercent,
+                value: formatCurrency(summary.weekRevenue),
+                changePercent: nil,
                 icon: "calendar",
                 color: .blue
             )
 
             KPICard(
                 title: "This Month",
-                value: formatCurrency(summary.salesThisMonth.total),
-                changePercent: summary.salesThisMonth.changePercent,
+                value: formatCurrency(summary.monthRevenue),
+                changePercent: nil,
                 icon: "calendar.badge.clock",
                 color: .teal
             )
 
             KPICard(
                 title: "Stock Value",
-                value: formatCurrency(summary.totalStockValue),
+                value: formatCurrency(summary.stockValue),
                 changePercent: nil,
                 icon: "cube.box.fill",
                 color: .orange
@@ -127,14 +127,14 @@ struct DashboardView: View {
         HStack(spacing: 12) {
             StockAlertCard(
                 title: "Out of Stock",
-                count: summary.outOfStockCount,
+                count: summary.outOfStock,
                 color: .red,
                 icon: "exclamationmark.triangle.fill"
             )
 
             StockAlertCard(
                 title: "Low Stock",
-                count: summary.lowStockCount,
+                count: summary.lowStock,
                 color: .orange,
                 icon: "exclamationmark.circle.fill"
             )
@@ -164,7 +164,7 @@ struct DashboardView: View {
                         Spacer()
 
                         VStack(alignment: .trailing) {
-                            Text("\(product.unitsSold) sold")
+                            Text("\(Int(product.unitsSold)) sold")
                                 .font(.caption)
                                 .foregroundStyle(.secondary)
                             Text(formatCurrency(product.revenue))
@@ -188,7 +188,7 @@ struct DashboardView: View {
     // MARK: - Recent Sales
 
     @ViewBuilder
-    private func recentSalesSection(_ sales: [Sale]) -> some View {
+    private func recentSalesSection(_ sales: [RecentSale]) -> some View {
         VStack(alignment: .leading, spacing: 12) {
             Text("Recent Sales")
                 .font(.headline)
@@ -229,9 +229,11 @@ struct DashboardView: View {
 
     // MARK: - Helpers
 
-    private func formatCurrency(_ value: String) -> String {
-        let decimal = Decimal(string: value) ?? 0
-        return "\(AppConfig.currencySymbol)\(decimal)"
+    private func formatCurrency(_ value: Double) -> String {
+        let formatted = value.truncatingRemainder(dividingBy: 1) == 0
+            ? String(format: "%.0f", value)
+            : String(format: "%.2f", value)
+        return "\(AppConfig.currencySymbol)\(formatted)"
     }
 }
 

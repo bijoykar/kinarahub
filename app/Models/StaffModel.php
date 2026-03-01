@@ -32,12 +32,14 @@ class StaffModel
         $sql = 'SELECT s.id, s.name, s.email, s.mobile, s.status, s.created_at,
                        r.name AS role_name, r.id AS role_id
                 FROM staff s
-                LEFT JOIN roles r ON r.id = s.role_id
-                WHERE s.store_id = ?
-                ORDER BY s.created_at DESC';
+                LEFT JOIN roles r ON r.id = s.role_id';
+        $params = [];
+        $sql = TenantScope::appendWhere($sql, 's');
+        TenantScope::apply($params, $storeId);
+        $sql .= ' ORDER BY s.created_at DESC';
 
         $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([$storeId]);
+        $stmt->execute($params);
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
@@ -52,11 +54,14 @@ class StaffModel
         $sql = 'SELECT s.*, r.name AS role_name
                 FROM staff s
                 LEFT JOIN roles r ON r.id = s.role_id
-                WHERE s.id = ? AND s.store_id = ?
-                LIMIT 1';
+                WHERE s.id = ?';
+        $params = [$staffId];
+        $sql = TenantScope::appendWhere($sql, 's');
+        TenantScope::apply($params, $storeId);
+        $sql .= ' LIMIT 1';
 
         $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([$staffId, $storeId]);
+        $stmt->execute($params);
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
         return $row !== false ? $row : null;
@@ -96,10 +101,11 @@ class StaffModel
             return;
         }
 
+        $sql = 'UPDATE staff SET ' . implode(', ', $fields) . ' WHERE id = ?';
         $params[] = $staffId;
-        $params[] = $storeId;
+        $sql = TenantScope::appendWhere($sql);
+        TenantScope::apply($params, $storeId);
 
-        $sql = 'UPDATE staff SET ' . implode(', ', $fields) . ' WHERE id = ? AND store_id = ?';
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute($params);
     }
@@ -109,10 +115,13 @@ class StaffModel
      */
     public function updatePassword(int $staffId, int $storeId, string $passwordHash): void
     {
-        $stmt = $this->pdo->prepare(
-            'UPDATE staff SET password_hash = ? WHERE id = ? AND store_id = ?'
-        );
-        $stmt->execute([$passwordHash, $staffId, $storeId]);
+        $sql = 'UPDATE staff SET password_hash = ? WHERE id = ?';
+        $params = [$passwordHash, $staffId];
+        $sql = TenantScope::appendWhere($sql);
+        TenantScope::apply($params, $storeId);
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute($params);
     }
 
     /**
@@ -127,10 +136,13 @@ class StaffModel
 
         $newStatus = $staff['status'] === 'active' ? 'inactive' : 'active';
 
-        $stmt = $this->pdo->prepare(
-            'UPDATE staff SET status = ? WHERE id = ? AND store_id = ?'
-        );
-        $stmt->execute([$newStatus, $staffId, $storeId]);
+        $sql = 'UPDATE staff SET status = ? WHERE id = ?';
+        $params = [$newStatus, $staffId];
+        $sql = TenantScope::appendWhere($sql);
+        TenantScope::apply($params, $storeId);
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute($params);
 
         return $newStatus;
     }
@@ -140,13 +152,16 @@ class StaffModel
      */
     public function emailExistsInStore(string $email, int $storeId, int $excludeId = 0): bool
     {
-        $sql = 'SELECT COUNT(*) FROM staff WHERE email = ? AND store_id = ?';
-        $params = [$email, $storeId];
+        $sql = 'SELECT COUNT(*) FROM staff WHERE email = ?';
+        $params = [$email];
 
         if ($excludeId > 0) {
             $sql .= ' AND id != ?';
             $params[] = $excludeId;
         }
+
+        $sql = TenantScope::appendWhere($sql);
+        TenantScope::apply($params, $storeId);
 
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute($params);

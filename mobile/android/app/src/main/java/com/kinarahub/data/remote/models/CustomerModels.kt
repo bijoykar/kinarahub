@@ -48,3 +48,31 @@ data class RecordPaymentRequest(
     val paymentMethod: String,
     val notes: String? = null
 )
+
+data class CreateCustomerResponse(
+    @SerializedName("customer_id")
+    val customerId: Int
+)
+
+/**
+ * Wrapper for GET /customers/:id/credits response.
+ * PHP returns: { customer: {...}, credits: [...], payment_history: [...] }
+ */
+data class CustomerCreditDetail(
+    val customer: Customer?,
+    val credits: List<CustomerCredit>?,
+    @SerializedName("payment_history")
+    val paymentHistory: List<CustomerPayment>?
+)
+
+data class CustomerPayment(
+    val id: Int,
+    @SerializedName("customer_id")
+    val customerId: Int,
+    val amount: Double,
+    @SerializedName("payment_method")
+    val paymentMethod: String?,
+    val notes: String?,
+    @SerializedName("created_at")
+    val createdAt: String?
+)

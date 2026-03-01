@@ -17,7 +17,7 @@ interface TokenStore {
     var userEmail: String?
     var storeId: Int
     var storeName: String?
-    var roleName: String?
+    var roleId: Int
     val isLoggedIn: Boolean
     fun saveAuth(authData: AuthData)
     fun clear()
@@ -68,23 +68,23 @@ class TokenStoreImpl @Inject constructor(
         get() = prefs.getString(KEY_STORE_NAME, null)
         set(value) = prefs.edit().putString(KEY_STORE_NAME, value).apply()
 
-    override var roleName: String?
-        get() = prefs.getString(KEY_ROLE_NAME, null)
-        set(value) = prefs.edit().putString(KEY_ROLE_NAME, value).apply()
+    override var roleId: Int
+        get() = prefs.getInt(KEY_ROLE_ID, -1)
+        set(value) = prefs.edit().putInt(KEY_ROLE_ID, value).apply()
 
     override val isLoggedIn: Boolean
         get() = accessToken != null
 
     override fun saveAuth(authData: AuthData) {
         accessToken = authData.accessToken
-        refreshToken = authData.refreshToken
+        authData.refreshToken?.let { refreshToken = it }
         authData.user?.let { user ->
             userId = user.id
             userName = user.name
             userEmail = user.email
             storeId = user.storeId
             storeName = user.storeName
-            roleName = user.roleName
+            roleId = user.roleId
         }
     }
 
@@ -100,6 +100,6 @@ class TokenStoreImpl @Inject constructor(
         private const val KEY_USER_EMAIL = "user_email"
         private const val KEY_STORE_ID = "store_id"
         private const val KEY_STORE_NAME = "store_name"
-        private const val KEY_ROLE_NAME = "role_name"
+        private const val KEY_ROLE_ID = "role_id"
     }
 }

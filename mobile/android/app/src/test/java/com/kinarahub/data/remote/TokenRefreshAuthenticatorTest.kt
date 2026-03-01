@@ -117,8 +117,7 @@ class TokenRefreshAuthenticatorTest {
                         "email": "test@example.com",
                         "store_id": 1,
                         "store_name": "Test Store",
-                        "role_id": 1,
-                        "role_name": "Owner"
+                        "role_id": 1
                     }
                 },
                 "meta": null,
@@ -253,19 +252,19 @@ class FakeTokenStore : com.kinarahub.data.local.TokenStore {
     override var userEmail: String? = null
     override var storeId: Int = -1
     override var storeName: String? = null
-    override var roleName: String? = null
+    override var roleId: Int = -1
     override val isLoggedIn: Boolean get() = accessToken != null
 
     override fun saveAuth(authData: AuthData) {
         accessToken = authData.accessToken
-        refreshToken = authData.refreshToken
+        authData.refreshToken?.let { refreshToken = it }
         authData.user?.let { user ->
             userId = user.id
             userName = user.name
             userEmail = user.email
             storeId = user.storeId
             storeName = user.storeName
-            roleName = user.roleName
+            roleId = user.roleId
         }
     }
 
@@ -277,6 +276,6 @@ class FakeTokenStore : com.kinarahub.data.local.TokenStore {
         userEmail = null
         storeId = -1
         storeName = null
-        roleName = null
+        roleId = -1
     }
 }

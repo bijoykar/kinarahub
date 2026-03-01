@@ -17,7 +17,6 @@ final class SalesViewModel: ObservableObject {
     @Published var selectedCustomer: Customer?
     @Published var saleNotes: String = ""
     @Published var isSubmitting = false
-    @Published var lastCreatedSale: Sale?
     @Published var showSaleSuccess = false
     @Published var validationError: String?
 
@@ -76,9 +75,8 @@ final class SalesViewModel: ObservableObject {
             }
             if let meta = response.meta {
                 currentPage = meta.page
-                totalPages = meta.total > 0
-                    ? Int(ceil(Double(meta.total) / Double(meta.perPage)))
-                    : 1
+                totalPages = meta.totalPages
+                    ?? (meta.total > 0 ? Int(ceil(Double(meta.total) / Double(meta.perPage))) : 1)
             }
         } catch let error as APIError {
             errorMessage = error.errorDescription
@@ -210,11 +208,10 @@ final class SalesViewModel: ObservableObject {
         )
 
         do {
-            let response: APIResponse<Sale> = try await apiClient.post(
+            let _: APIResponse<CreateSaleResponse> = try await apiClient.post(
                 url: APIEndpoints.Sales.create,
                 body: body
             )
-            lastCreatedSale = response.data
             showSaleSuccess = true
             clearCart()
         } catch let error as APIError {

@@ -13,11 +13,13 @@ struct Meta: Codable {
     let page: Int
     let perPage: Int
     let total: Int
+    let totalPages: Int?
 
     enum CodingKeys: String, CodingKey {
         case page
         case perPage = "per_page"
         case total
+        case totalPages = "total_pages"
     }
 }
 
@@ -31,12 +33,32 @@ struct LoginRequest: Codable {
 struct LoginResponse: Codable {
     let accessToken: String
     let refreshToken: String
+    let tokenType: String?
     let expiresIn: Int
+    let user: LoginUser?
 
     enum CodingKeys: String, CodingKey {
         case accessToken = "access_token"
         case refreshToken = "refresh_token"
+        case tokenType = "token_type"
         case expiresIn = "expires_in"
+        case user
+    }
+}
+
+struct LoginUser: Codable {
+    let id: Int
+    let name: String
+    let email: String
+    let storeId: Int
+    let storeName: String
+    let roleId: Int
+
+    enum CodingKeys: String, CodingKey {
+        case id, name, email
+        case storeId = "store_id"
+        case storeName = "store_name"
+        case roleId = "role_id"
     }
 }
 
@@ -51,11 +73,13 @@ struct RefreshRequest: Codable {
 struct RefreshResponse: Codable {
     let accessToken: String
     let refreshToken: String
+    let tokenType: String?
     let expiresIn: Int
 
     enum CodingKeys: String, CodingKey {
         case accessToken = "access_token"
         case refreshToken = "refresh_token"
+        case tokenType = "token_type"
         case expiresIn = "expires_in"
     }
 }
@@ -101,7 +125,7 @@ struct Product: Codable, Identifiable, Hashable {
     let categoryName: String?
     let uomId: Int?
     let uomName: String?
-    let uomAbbreviation: String?
+    let uomAbbr: String?
     let sellingPrice: String
     let costPrice: String?
     let stockQuantity: String
@@ -120,7 +144,7 @@ struct Product: Codable, Identifiable, Hashable {
         case categoryName = "category_name"
         case uomId = "uom_id"
         case uomName = "uom_name"
-        case uomAbbreviation = "uom_abbreviation"
+        case uomAbbr = "uom_abbr"
         case sellingPrice = "selling_price"
         case costPrice = "cost_price"
         case stockQuantity = "stock_quantity"
@@ -312,6 +336,15 @@ struct CreateSaleItemRequest: Codable {
     }
 }
 
+/// POST /sales returns {sale_id: X}, not a full Sale
+struct CreateSaleResponse: Codable {
+    let saleId: Int
+
+    enum CodingKeys: String, CodingKey {
+        case saleId = "sale_id"
+    }
+}
+
 enum PaymentMethod: String, CaseIterable, Identifiable {
     case cash
     case upi
@@ -400,52 +433,116 @@ struct RecordPaymentRequest: Codable {
     }
 }
 
+/// POST /customers returns {customer_id: X}, not a full Customer
+struct CreateCustomerResponse: Codable {
+    let customerId: Int
+
+    enum CodingKeys: String, CodingKey {
+        case customerId = "customer_id"
+    }
+}
+
+/// GET /customers/:id/credits returns nested object
+struct CustomerCreditsResponse: Codable {
+    let customer: Customer
+    let credits: [CustomerCredit]
+    let paymentHistory: [CustomerPayment]
+
+    enum CodingKeys: String, CodingKey {
+        case customer, credits
+        case paymentHistory = "payment_history"
+    }
+}
+
+struct CustomerPayment: Codable, Identifiable {
+    let id: Int
+    let amount: String
+    let paymentMethod: String
+    let notes: String?
+    let createdAt: String?
+
+    enum CodingKeys: String, CodingKey {
+        case id, amount, notes
+        case paymentMethod = "payment_method"
+        case createdAt = "created_at"
+    }
+}
+
 // MARK: - Dashboard
 
+/// Matches the shape returned by DashboardService::getAllStats()
 struct DashboardSummary: Codable {
-    let salesToday: DashboardMetric
-    let salesThisWeek: DashboardMetric
-    let salesThisMonth: DashboardMetric
-    let totalStockValue: String
-    let outOfStockCount: Int
-    let lowStockCount: Int
-    let topProductsToday: [TopProduct]
-    let recentSales: [Sale]
+    let todayRevenue: Double
+    let yesterdayRevenue: Double
+    let percentChange: Double
+    let weekRevenue: Double
+    let monthRevenue: Double
+    let stockValue: Double
+    let outOfStock: Int
+    let lowStock: Int
+    let topProducts: [TopProduct]
+    let recentSales: [RecentSale]
+    let salesTrend: SalesTrendResponse?
+    let paymentBreakdown: PaymentBreakdownResponse?
+    let stockDistribution: StockDistributionResponse?
 
     enum CodingKeys: String, CodingKey {
-        case salesToday = "sales_today"
-        case salesThisWeek = "sales_this_week"
-        case salesThisMonth = "sales_this_month"
-        case totalStockValue = "total_stock_value"
-        case outOfStockCount = "out_of_stock_count"
-        case lowStockCount = "low_stock_count"
-        case topProductsToday = "top_products_today"
+        case todayRevenue = "today_revenue"
+        case yesterdayRevenue = "yesterday_revenue"
+        case percentChange = "percent_change"
+        case weekRevenue = "week_revenue"
+        case monthRevenue = "month_revenue"
+        case stockValue = "stock_value"
+        case outOfStock = "out_of_stock"
+        case lowStock = "low_stock"
+        case topProducts = "top_products"
         case recentSales = "recent_sales"
+        case salesTrend = "sales_trend"
+        case paymentBreakdown = "payment_breakdown"
+        case stockDistribution = "stock_distribution"
     }
 }
 
-struct DashboardMetric: Codable {
-    let total: String
-    let changePercent: Double?
-
-    enum CodingKeys: String, CodingKey {
-        case total
-        case changePercent = "change_percent"
-    }
-}
-
+/// Top product from dashboard — returned by top5ProductsToday()
 struct TopProduct: Codable, Identifiable {
-    let id: Int?
+    var id: String { productName }
     let productName: String
-    let unitsSold: Int
-    let revenue: String
+    let unitsSold: Double
+    let revenue: Double
 
     enum CodingKeys: String, CodingKey {
-        case id
         case productName = "product_name"
         case unitsSold = "units_sold"
         case revenue
     }
+}
+
+/// Recent sale from dashboard — lighter than full Sale model
+struct RecentSale: Codable, Identifiable {
+    var id: String { saleNumber }
+    let saleNumber: String
+    let saleDate: String
+    let paymentMethod: String
+    let totalAmount: Double
+    let customerName: String?
+
+    enum CodingKeys: String, CodingKey {
+        case saleNumber = "sale_number"
+        case saleDate = "sale_date"
+        case paymentMethod = "payment_method"
+        case totalAmount = "total_amount"
+        case customerName = "customer_name"
+    }
+}
+
+struct PaymentBreakdownResponse: Codable {
+    let labels: [String]
+    let amounts: [Double]
+}
+
+struct StockDistributionResponse: Codable {
+    let labels: [String]
+    let counts: [Int]
 }
 
 // MARK: - Sales Trend Chart
@@ -462,7 +559,7 @@ struct ChartDataPoint: Identifiable, Equatable {
 
 struct SalesTrendResponse: Codable {
     let labels: [String]
-    let data: [Double]
+    let amounts: [Double]
 }
 
 enum TrendPeriod: String, CaseIterable, Identifiable {

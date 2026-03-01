@@ -108,14 +108,14 @@ struct ProductDetailView: View {
             HStack(spacing: 16) {
                 DetailCard(
                     title: "Quantity",
-                    value: "\(product.stockQuantityDecimal) \(product.uomAbbreviation ?? "")",
+                    value: "\(product.stockQuantityDecimal) \(product.uomAbbr ?? "")",
                     color: product.stockStatus == .outOfStock ? .red :
                            product.stockStatus == .lowStock ? .orange : .green
                 )
 
                 DetailCard(
                     title: "Reorder Point",
-                    value: "\(Decimal(string: product.reorderPoint) ?? 0) \(product.uomAbbreviation ?? "")",
+                    value: "\(Decimal(string: product.reorderPoint) ?? 0) \(product.uomAbbr ?? "")",
                     color: .gray
                 )
             }

@@ -68,3 +68,8 @@ data class CreateSaleItemRequest(
     @SerializedName("unit_price")
     val unitPrice: Double
 )
+
+data class CreateSaleResponse(
+    @SerializedName("sale_id")
+    val saleId: Int
+)

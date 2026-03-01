@@ -108,6 +108,24 @@
 
 <body class="h-full bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100">
 
+<?php // ---- Impersonation banner (admin browsing a store as read-only) ----
+if (!empty($_SESSION['impersonate_store_id'])):
+    $impersonatedName = htmlspecialchars($_SESSION['impersonate_store_name'] ?? 'Store', ENT_QUOTES, 'UTF-8');
+?>
+<div class="sticky top-0 z-50 flex items-center justify-between gap-4 bg-amber-500 px-4 py-2 text-sm font-medium text-white shadow-md" role="alert">
+    <span class="flex items-center gap-2">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+        Viewing as <strong class="ml-1"><?= $impersonatedName ?></strong>&nbsp;&mdash; Read Only
+    </span>
+    <form method="POST" action="/kinarahub/admin/exit-impersonate" class="flex-shrink-0">
+        <?= \App\Middleware\CsrfMiddleware::field() ?>
+        <button type="submit" class="rounded-md bg-amber-600 px-3 py-1 text-xs font-semibold text-white hover:bg-amber-700 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-white">
+            Exit
+        </button>
+    </form>
+</div>
+<?php endif; ?>
+
 <?php
     // Resolve variables with defaults
     $pageTitle    = $pageTitle ?? 'Kinara Store Hub';
@@ -180,11 +198,20 @@
 <div class="flex h-full">
 
     <!-- =====================================================
-         SIDEBAR (fixed, w-64)
+         MOBILE SIDEBAR BACKDROP (hidden on lg+)
+         ===================================================== -->
+    <div
+        id="sidebar-backdrop"
+        class="fixed inset-0 z-30 bg-gray-900/60 backdrop-blur-sm transition-opacity duration-300 lg:hidden hidden"
+        aria-hidden="true"
+    ></div>
+
+    <!-- =====================================================
+         SIDEBAR (fixed, w-64; off-canvas on mobile)
          ===================================================== -->
     <aside
         id="app-sidebar"
-        class="fixed inset-y-0 left-0 z-30 flex w-64 flex-col bg-slate-900 overflow-y-auto"
+        class="fixed inset-y-0 left-0 z-40 flex w-64 flex-col bg-slate-900 overflow-y-auto transition-transform duration-300 -translate-x-full lg:translate-x-0 lg:z-30"
         aria-label="Main navigation"
     >
         <!-- ----- Store identity ----- -->
@@ -207,6 +234,17 @@
                 <p class="truncate text-sm font-semibold text-white leading-tight"><?= $storeName ?></p>
                 <p class="text-xs text-slate-400 leading-tight mt-0.5">Store Hub</p>
             </div>
+            <!-- Close sidebar button (mobile only) -->
+            <button
+                id="sidebar-close"
+                type="button"
+                class="lg:hidden flex-shrink-0 rounded-md p-1.5 text-slate-400 hover:bg-slate-800 hover:text-white transition-colors duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500"
+                aria-label="Close navigation menu"
+            >
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+            </button>
         </div>
 
         <!-- ----- Primary navigation ----- -->
@@ -275,14 +313,30 @@
     <!-- /sidebar -->
 
     <!-- =====================================================
-         MAIN COLUMN (offset by sidebar width)
+         MAIN COLUMN (offset by sidebar width on lg+)
          ===================================================== -->
-    <div class="flex flex-1 flex-col min-h-full ml-64">
+    <div class="flex flex-1 flex-col min-h-full lg:ml-64">
 
         <!-- ================================================
              TOP HEADER BAR
              ================================================ -->
-        <header class="sticky top-0 z-20 flex items-center justify-between gap-4 border-b border-gray-200 dark:border-gray-700 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm px-6 py-3" aria-label="Top navigation bar">
+        <header class="sticky top-0 z-20 flex items-center justify-between gap-4 border-b border-gray-200 dark:border-gray-700 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm px-4 sm:px-6 py-3" aria-label="Top navigation bar">
+
+            <!-- Mobile hamburger + Breadcrumb -->
+            <div class="flex items-center gap-3 min-w-0">
+            <!-- Mobile menu button (hidden on lg+) -->
+            <button
+                id="sidebar-toggle"
+                type="button"
+                class="lg:hidden rounded-lg p-2 text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700 transition-colors duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500"
+                aria-label="Open navigation menu"
+                aria-expanded="false"
+                aria-controls="app-sidebar"
+            >
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"/>
+                </svg>
+            </button>
 
             <!-- Breadcrumb -->
             <nav aria-label="Breadcrumb" class="flex items-center min-w-0">
@@ -316,6 +370,7 @@
                     <?php endforeach; ?>
                 </ol>
             </nav>
+            </div><!-- /hamburger + breadcrumb wrapper -->
 
             <!-- Right-side controls -->
             <div class="flex items-center gap-3 flex-shrink-0">
@@ -407,6 +462,55 @@
     }
 
     // -------------------------------------------------------
+    // Mobile sidebar toggle
+    // -------------------------------------------------------
+    var sidebar      = document.getElementById('app-sidebar');
+    var backdrop     = document.getElementById('sidebar-backdrop');
+    var sidebarBtn   = document.getElementById('sidebar-toggle');
+    var sidebarOpen  = false;
+
+    function openSidebar() {
+        if (!sidebar || !backdrop) return;
+        sidebarOpen = true;
+        sidebar.classList.remove('-translate-x-full');
+        sidebar.classList.add('translate-x-0');
+        backdrop.classList.remove('hidden');
+        backdrop.classList.add('opacity-100');
+        document.body.style.overflow = 'hidden';
+        if (sidebarBtn) sidebarBtn.setAttribute('aria-expanded', 'true');
+    }
+
+    function closeSidebar() {
+        if (!sidebar || !backdrop) return;
+        sidebarOpen = false;
+        sidebar.classList.remove('translate-x-0');
+        sidebar.classList.add('-translate-x-full');
+        backdrop.classList.add('hidden');
+        backdrop.classList.remove('opacity-100');
+        document.body.style.overflow = '';
+        if (sidebarBtn) sidebarBtn.setAttribute('aria-expanded', 'false');
+    }
+
+    if (sidebarBtn) {
+        sidebarBtn.addEventListener('click', function () {
+            sidebarOpen ? closeSidebar() : openSidebar();
+        });
+    }
+    if (backdrop) {
+        backdrop.addEventListener('click', closeSidebar);
+    }
+    var sidebarCloseBtn = document.getElementById('sidebar-close');
+    if (sidebarCloseBtn) {
+        sidebarCloseBtn.addEventListener('click', closeSidebar);
+    }
+
+    // Close mobile sidebar on lg breakpoint resize
+    var mql = window.matchMedia('(min-width: 1024px)');
+    mql.addEventListener('change', function (e) {
+        if (e.matches && sidebarOpen) closeSidebar();
+    });
+
+    // -------------------------------------------------------
     // Modal helpers
     // -------------------------------------------------------
 
@@ -458,8 +562,13 @@
     // Keyboard shortcuts
     // -------------------------------------------------------
     document.addEventListener('keydown', function (e) {
-        // Esc — close the topmost open modal (dialog or [role="dialog"])
+        // Esc — close mobile sidebar first, then close the topmost open modal
         if (e.key === 'Escape') {
+            if (sidebarOpen) {
+                closeSidebar();
+                e.preventDefault();
+                return;
+            }
             var dialogs = Array.from(
                 document.querySelectorAll('dialog[open], [role="dialog"]:not([hidden]):not([aria-hidden="true"])')
             );

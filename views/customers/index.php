@@ -118,7 +118,7 @@ $csrfToken  = $csrfToken ?? '';
             </button>
         </div>
         <form method="POST" action="/kinarahub/customers" class="px-6 py-5 space-y-4">
-            <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrfToken, ENT_QUOTES, 'UTF-8') ?>">
+            <?= \App\Middleware\CsrfMiddleware::field() ?>
             <div>
                 <label for="cust-name" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Full name</label>
                 <input type="text" id="cust-name" name="name" required maxlength="100" placeholder="Customer name" class="block w-full rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700/50 px-4 py-2.5 text-sm text-gray-900 dark:text-white placeholder-gray-400 shadow-sm focus:border-brand-500 focus:ring-2 focus:ring-brand-500/30 focus:outline-none transition-colors">

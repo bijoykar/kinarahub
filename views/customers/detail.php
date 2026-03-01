@@ -142,7 +142,7 @@ $balance = (float)($customer['outstanding_balance'] ?? 0);
             </button>
         </div>
         <form method="POST" action="/kinarahub/customers/<?= (int)($customer['id'] ?? 0) ?>/payments" class="px-6 py-5 space-y-4">
-            <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrfToken, ENT_QUOTES, 'UTF-8') ?>">
+            <?= \App\Middleware\CsrfMiddleware::field() ?>
 
             <div class="rounded-xl bg-gray-50 dark:bg-gray-700/30 p-3 text-center">
                 <p class="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-0.5">Outstanding balance</p>

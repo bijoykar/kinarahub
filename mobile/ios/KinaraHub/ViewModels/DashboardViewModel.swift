@@ -41,11 +41,11 @@ final class DashboardViewModel: ObservableObject {
 
         do {
             let response: APIResponse<SalesTrendResponse> = try await apiClient.get(
-                url: APIEndpoints.Dashboard.summary,
-                queryParams: ["period": period.rawValue]
+                url: APIEndpoints.Dashboard.chart,
+                queryParams: ["type": "sales_trend", "period": period.rawValue]
             )
             if let data = response.data {
-                trendDataPoints = zip(data.labels, data.data).map { label, amount in
+                trendDataPoints = zip(data.labels, data.amounts).map { label, amount in
                     ChartDataPoint(label: label, amount: amount)
                 }
             }

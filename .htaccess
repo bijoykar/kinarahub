@@ -19,6 +19,12 @@ RewriteBase /kinarahub/
 # --- Block direct access to sensitive directories and files ---
 RewriteRule ^(app|config|vendor|tests|\.env.*)(/|$) - [F,L]
 
+# --- API requests go to the API front controller ---
+RewriteRule ^api/v1(/.*)?$ api/v1/index.php [QSA,L]
+
+# --- Admin requests go to the admin front controller ---
+RewriteRule ^admin(/.*)?$ admin/index.php [QSA,L]
+
 # --- Do NOT rewrite requests for real files or directories ---
 RewriteCond %{REQUEST_FILENAME} -f [OR]
 RewriteCond %{REQUEST_FILENAME} -d

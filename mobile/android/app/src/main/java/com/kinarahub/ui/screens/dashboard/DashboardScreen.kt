@@ -135,8 +135,8 @@ fun DashboardScreen(
                         ) {
                             KpiCard(
                                 title = "Sales Today",
-                                value = formatCurrency(summary.salesToday),
-                                subtitle = summary.salesTodayChange?.let {
+                                value = formatCurrency(summary.todayRevenue),
+                                subtitle = summary.percentChange?.let {
                                     val sign = if (it >= 0) "+" else ""
                                     "$sign${"%.1f".format(it)}% vs yesterday"
                                 },
@@ -144,7 +144,7 @@ fun DashboardScreen(
                             )
                             KpiCard(
                                 title = "This Week",
-                                value = formatCurrency(summary.salesThisWeek),
+                                value = formatCurrency(summary.weekRevenue),
                                 modifier = Modifier.weight(1f)
                             )
                         }
@@ -158,12 +158,12 @@ fun DashboardScreen(
                         ) {
                             KpiCard(
                                 title = "This Month",
-                                value = formatCurrency(summary.salesThisMonth),
+                                value = formatCurrency(summary.monthRevenue),
                                 modifier = Modifier.weight(1f)
                             )
                             KpiCard(
                                 title = "Stock Value",
-                                value = formatCurrency(summary.totalStockValue),
+                                value = formatCurrency(summary.stockValue),
                                 modifier = Modifier.weight(1f)
                             )
                         }
@@ -225,7 +225,7 @@ fun DashboardScreen(
                     // Sales Trend Chart
                     item {
                         val trendData = salesTrend
-                        val chartEntries = trendData?.values?.mapIndexed { index, value ->
+                        val chartEntries = trendData?.amounts?.mapIndexed { index, value ->
                             Entry(index.toFloat(), value.toFloat())
                         } ?: emptyList()
                         val chartLabels = trendData?.labels ?: emptyList()
@@ -241,7 +241,7 @@ fun DashboardScreen(
                     }
 
                     // Top Products Today
-                    if (!summary.topProductsToday.isNullOrEmpty()) {
+                    if (!summary.topProducts.isNullOrEmpty()) {
                         item {
                             Text(
                                 text = "Top Products Today",
@@ -257,7 +257,7 @@ fun DashboardScreen(
                                 elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
                             ) {
                                 Column(modifier = Modifier.padding(12.dp)) {
-                                    summary.topProductsToday.forEachIndexed { index, product ->
+                                    summary.topProducts.forEachIndexed { index, product ->
                                         Row(
                                             modifier = Modifier
                                                 .fillMaxWidth()
@@ -278,7 +278,7 @@ fun DashboardScreen(
                                                 Spacer(modifier = Modifier.width(8.dp))
                                                 Column {
                                                     Text(
-                                                        text = product.name,
+                                                        text = product.productName,
                                                         style = MaterialTheme.typography.bodyMedium
                                                     )
                                                     Text(
@@ -294,7 +294,7 @@ fun DashboardScreen(
                                                 fontWeight = FontWeight.SemiBold
                                             )
                                         }
-                                        if (index < summary.topProductsToday.size - 1) {
+                                        if (index < summary.topProducts.size - 1) {
                                             HorizontalDivider()
                                         }
                                     }

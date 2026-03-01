@@ -64,9 +64,8 @@ final class CustomerViewModel: ObservableObject {
             }
             if let meta = response.meta {
                 currentPage = meta.page
-                totalPages = meta.total > 0
-                    ? Int(ceil(Double(meta.total) / Double(meta.perPage)))
-                    : 1
+                totalPages = meta.totalPages
+                    ?? (meta.total > 0 ? Int(ceil(Double(meta.total) / Double(meta.perPage))) : 1)
             }
         } catch let error as APIError {
             errorMessage = error.errorDescription
@@ -87,10 +86,10 @@ final class CustomerViewModel: ObservableObject {
         await loadCustomers(page: 1)
     }
 
-    func createCustomer() async -> Customer? {
+    func createCustomer() async -> Bool {
         guard !newCustomerName.isEmpty else {
             errorMessage = "Customer name is required."
-            return nil
+            return false
         }
 
         isCreating = true
@@ -103,18 +102,17 @@ final class CustomerViewModel: ObservableObject {
         )
 
         do {
-            let response: APIResponse<Customer> = try await apiClient.post(
+            let _: APIResponse<CreateCustomerResponse> = try await apiClient.post(
                 url: APIEndpoints.Customers.create,
                 body: body
             )
-            if let customer = response.data {
-                customers.insert(customer, at: 0)
-                newCustomerName = ""
-                newCustomerMobile = ""
-                newCustomerEmail = ""
-                showCreateForm = false
-                return customer
-            }
+            newCustomerName = ""
+            newCustomerMobile = ""
+            newCustomerEmail = ""
+            showCreateForm = false
+            isCreating = false
+            await refresh()
+            return true
         } catch let error as APIError {
             errorMessage = error.errorDescription
         } catch {
@@ -122,17 +120,17 @@ final class CustomerViewModel: ObservableObject {
         }
 
         isCreating = false
-        return nil
+        return false
     }
 
     func loadCredits(customerId: Int) async {
         isLoadingCredits = true
 
         do {
-            let response: APIResponse<[CustomerCredit]> = try await apiClient.get(
+            let response: APIResponse<CustomerCreditsResponse> = try await apiClient.get(
                 url: APIEndpoints.Customers.credits(customerId)
             )
-            selectedCustomerCredits = response.data ?? []
+            selectedCustomerCredits = response.data?.credits ?? []
         } catch {
             errorMessage = error.localizedDescription
         }
