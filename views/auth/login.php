@@ -30,7 +30,7 @@ $errorMessage = $errorMessage ?? '';
 <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-1">Welcome back</h2>
 <p class="text-sm text-gray-500 dark:text-gray-400 mb-6">Sign in to your store account</p>
 
-<form method="POST" action="/kinarahub/login" class="space-y-5" novalidate>
+<form method="POST" action="<?= htmlspecialchars(APP_URL, ENT_QUOTES, 'UTF-8') ?>/login" class="space-y-5" novalidate>
     <?= \App\Middleware\CsrfMiddleware::field() ?>
 
     <!-- Email -->
