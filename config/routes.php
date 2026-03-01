@@ -60,6 +60,10 @@ $router->get('/dashboard/chart-data', 'DashboardController@chartData', [AuthMidd
 // Settings / RBAC routes — Phase 4: Roles & Staff management
 // ---------------------------------------------------------------------------
 
+$router->get('/settings', function () {
+    App\Core\Response::redirect('/settings/roles');
+}, [App\Middleware\AuthMiddleware::class]);
+
 // Roles
 $router->get('/settings/roles', 'RoleController@index', [AuthMiddleware::class, new PermissionMiddleware('settings', 'read')]);
 $router->get('/settings/roles/create', 'RoleController@create', [AuthMiddleware::class, new PermissionMiddleware('settings', 'create')]);
