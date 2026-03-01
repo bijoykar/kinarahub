@@ -123,7 +123,7 @@
             </div>
             <?php endif; ?>
 
-            <form method="POST" action="/kinarahub/admin/login" class="space-y-5">
+            <form method="POST" action="<?= APP_URL ?>/admin/login" class="space-y-5">
                 <?= \App\Middleware\CsrfMiddleware::field() ?>
 
                 <!-- Email -->

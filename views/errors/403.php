@@ -18,8 +18,8 @@ http_response_code(403);
 $pageTitle = '403 — Access Denied | Kinara Store Hub';
 
 $isAuthenticated = !empty($_SESSION['staff_id']);
-$dashboardHref   = '/kinarahub/dashboard';
-$loginHref       = '/kinarahub/login';
+$dashboardHref   = APP_URL . '/dashboard';
+$loginHref       = APP_URL . '/login';
 ?>
 <!DOCTYPE html>
 <html lang="en" class="h-full">

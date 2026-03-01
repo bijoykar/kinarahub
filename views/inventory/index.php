@@ -60,7 +60,7 @@ $statusDots = [
             Import CSV
         </button>
         <a
-            href="/kinarahub/inventory/export"
+            href="<?= APP_URL ?>/inventory/export"
             class="inline-flex items-center gap-2 rounded-xl bg-white dark:bg-gray-700 px-4 py-2.5 text-sm font-medium text-gray-700 dark:text-gray-300 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors duration-150"
             aria-label="Export inventory to CSV"
         >
@@ -85,7 +85,7 @@ $statusDots = [
 
 <!-- Filter bar -->
 <div class="mb-4 flex flex-col sm:flex-row gap-3">
-    <form method="GET" action="/kinarahub/inventory" class="flex flex-1 flex-wrap gap-3" id="filter-form">
+    <form method="GET" action="<?= APP_URL ?>/inventory" class="flex flex-1 flex-wrap gap-3" id="filter-form">
         <!-- Search -->
         <div class="relative flex-1 min-w-[200px]">
             <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none text-gray-400 dark:text-gray-500">
@@ -317,7 +317,7 @@ $statusDots = [
         </div>
         <!-- Body -->
         <div class="overflow-y-auto flex-1 px-6 py-5">
-            <form id="product-form" method="POST" action="/kinarahub/inventory" class="space-y-4">
+            <form id="product-form" method="POST" action="<?= APP_URL ?>/inventory" class="space-y-4">
                 <?= \App\Middleware\CsrfMiddleware::field() ?>
                 <input type="hidden" id="product-id" name="id" value="">
                 <input type="hidden" id="product-method" name="_method" value="POST">
@@ -435,7 +435,7 @@ $statusDots = [
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z"/></svg>
             </button>
         </div>
-        <form id="import-form" method="POST" action="/kinarahub/inventory/import" enctype="multipart/form-data" class="px-6 py-5 space-y-4">
+        <form id="import-form" method="POST" action="<?= APP_URL ?>/inventory/import" enctype="multipart/form-data" class="px-6 py-5 space-y-4">
             <?= \App\Middleware\CsrfMiddleware::field() ?>
 
             <p class="text-sm text-gray-500 dark:text-gray-400">
@@ -510,7 +510,7 @@ $statusDots = [
 
         var form = document.getElementById('product-form');
         if (isEdit) {
-            form.action = '/kinarahub/inventory/' + product.id;
+            form.action = '<?= APP_URL ?>/inventory/' + product.id;
             document.getElementById('product-id').value = product.id;
             document.getElementById('product-method').value = 'PUT';
             document.getElementById('product-version').value = product.version || 0;
@@ -524,7 +524,7 @@ $statusDots = [
             document.getElementById('prod-stock').value = product.stock_quantity || '';
             document.getElementById('prod-reorder').value = product.reorder_point || '';
         } else {
-            form.action = '/kinarahub/inventory';
+            form.action = '<?= APP_URL ?>/inventory';
             document.getElementById('product-id').value = '';
             document.getElementById('product-method').value = 'POST';
             document.getElementById('product-version').value = '0';
@@ -623,7 +623,7 @@ $statusDots = [
                 // Send delete request
                 var form = document.createElement('form');
                 form.method = 'POST';
-                form.action = '/kinarahub/inventory/' + id + '/delete';
+                form.action = '<?= APP_URL ?>/inventory/' + id + '/delete';
                 form.style.display = 'none';
 
                 var csrf = document.createElement('input');

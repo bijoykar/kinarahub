@@ -19,7 +19,7 @@ $currency = CURRENCY_SYMBOL ?? '₹';
 <!-- Page header -->
 <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
     <div class="flex items-center gap-3">
-        <a href="/kinarahub/reports" class="inline-flex items-center justify-center rounded-lg p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 dark:hover:text-gray-300 dark:hover:bg-gray-700 transition-colors" aria-label="Back to reports">
+        <a href="<?= APP_URL ?>/reports" class="inline-flex items-center justify-center rounded-lg p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 dark:hover:text-gray-300 dark:hover:bg-gray-700 transition-colors" aria-label="Back to reports">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"/></svg>
         </a>
         <div>
@@ -29,11 +29,11 @@ $currency = CURRENCY_SYMBOL ?? '₹';
     </div>
     <?php if (!empty($results)): ?>
     <div class="flex items-center gap-2">
-        <a href="/kinarahub/reports/gst/export/pdf?from=<?= urlencode($filters['from']) ?>&to=<?= urlencode($filters['to']) ?>" class="inline-flex items-center gap-1.5 rounded-xl bg-red-600 px-4 py-2 text-sm font-semibold text-white hover:bg-red-700 transition-colors">
+        <a href="<?= APP_URL ?>/reports/gst/export/pdf?from=<?= urlencode($filters['from']) ?>&to=<?= urlencode($filters['to']) ?>" class="inline-flex items-center gap-1.5 rounded-xl bg-red-600 px-4 py-2 text-sm font-semibold text-white hover:bg-red-700 transition-colors">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"/></svg>
             PDF
         </a>
-        <a href="/kinarahub/reports/gst/export/csv?from=<?= urlencode($filters['from']) ?>&to=<?= urlencode($filters['to']) ?>" class="inline-flex items-center gap-1.5 rounded-xl bg-green-600 px-4 py-2 text-sm font-semibold text-white hover:bg-green-700 transition-colors">
+        <a href="<?= APP_URL ?>/reports/gst/export/csv?from=<?= urlencode($filters['from']) ?>&to=<?= urlencode($filters['to']) ?>" class="inline-flex items-center gap-1.5 rounded-xl bg-green-600 px-4 py-2 text-sm font-semibold text-white hover:bg-green-700 transition-colors">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"/></svg>
             CSV
         </a>
@@ -42,7 +42,7 @@ $currency = CURRENCY_SYMBOL ?? '₹';
 </div>
 
 <!-- Date range filter -->
-<form method="GET" action="/kinarahub/reports/gst" class="mb-6">
+<form method="GET" action="<?= APP_URL ?>/reports/gst" class="mb-6">
     <div class="flex flex-wrap items-end gap-3 rounded-xl bg-white dark:bg-gray-800 p-4 shadow-sm ring-1 ring-gray-200 dark:ring-gray-700">
         <div>
             <label for="gst-from" class="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">From</label>

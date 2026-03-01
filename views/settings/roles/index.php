@@ -28,7 +28,7 @@ $defaultBadge = 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 r
         <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Manage roles and their permissions for your store</p>
     </div>
     <a
-        href="/kinarahub/settings/roles/create"
+        href="<?= APP_URL ?>/settings/roles/create"
         id="btn-new-item"
         class="inline-flex items-center gap-2 rounded-xl bg-brand-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm shadow-brand-600/30 hover:bg-brand-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-gray-900 transition-colors duration-150"
     >
@@ -93,7 +93,7 @@ $defaultBadge = 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 r
                     <td class="whitespace-nowrap px-6 py-4 text-right">
                         <div class="flex items-center justify-end gap-1">
                             <a
-                                href="/kinarahub/settings/roles/<?= (int)$role['id'] ?>/edit"
+                                href="<?= APP_URL ?>/settings/roles/<?= (int)$role['id'] ?>/edit"
                                 class="inline-flex items-center rounded-lg p-2 text-gray-400 hover:text-brand-600 hover:bg-brand-50 dark:hover:text-brand-400 dark:hover:bg-brand-900/20 transition-colors duration-150"
                                 title="Edit role"
                                 aria-label="Edit <?= htmlspecialchars($role['name'], ENT_QUOTES, 'UTF-8') ?> role"
@@ -184,7 +184,7 @@ $defaultBadge = 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 r
 <script>
 function confirmDeleteRole(id, name) {
     document.getElementById('delete-role-name').textContent = name;
-    document.getElementById('delete-role-form').action = '/kinarahub/settings/roles/' + id + '/delete';
+    document.getElementById('delete-role-form').action = '<?= APP_URL ?>/settings/roles/' + id + '/delete';
     openModal('modal-delete-role');
 }
 </script>

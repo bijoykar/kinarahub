@@ -21,7 +21,7 @@ $balance = (float)($customer['outstanding_balance'] ?? 0);
 <!-- Page header -->
 <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
     <div class="flex items-center gap-3">
-        <a href="/kinarahub/customers" class="inline-flex items-center justify-center rounded-lg p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 dark:hover:text-gray-300 dark:hover:bg-gray-700 transition-colors" aria-label="Back to customers">
+        <a href="<?= APP_URL ?>/customers" class="inline-flex items-center justify-center rounded-lg p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 dark:hover:text-gray-300 dark:hover:bg-gray-700 transition-colors" aria-label="Back to customers">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"/></svg>
         </a>
         <div>
@@ -82,7 +82,7 @@ $balance = (float)($customer['outstanding_balance'] ?? 0);
                 <?php foreach ($credits as $credit): ?>
                 <tr class="hover:bg-gray-50/50 dark:hover:bg-gray-700/30 transition-colors">
                     <td class="whitespace-nowrap px-6 py-3">
-                        <a href="/kinarahub/sales/<?= (int)($credit['sale_id'] ?? 0) ?>" class="text-sm font-semibold text-brand-600 dark:text-brand-400 hover:underline"><?= htmlspecialchars($credit['sale_number'] ?? '-', ENT_QUOTES, 'UTF-8') ?></a>
+                        <a href="<?= APP_URL ?>/sales/<?= (int)($credit['sale_id'] ?? 0) ?>" class="text-sm font-semibold text-brand-600 dark:text-brand-400 hover:underline"><?= htmlspecialchars($credit['sale_number'] ?? '-', ENT_QUOTES, 'UTF-8') ?></a>
                     </td>
                     <td class="whitespace-nowrap px-6 py-3 text-right text-sm text-gray-700 dark:text-gray-300"><?= CURRENCY_SYMBOL ?? '₹' ?><?= number_format((float)($credit['amount_due'] ?? 0), 2) ?></td>
                     <td class="whitespace-nowrap px-6 py-3 text-right text-sm text-green-600 dark:text-green-400"><?= CURRENCY_SYMBOL ?? '₹' ?><?= number_format((float)($credit['amount_paid'] ?? 0), 2) ?></td>
@@ -141,7 +141,7 @@ $balance = (float)($customer['outstanding_balance'] ?? 0);
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z"/></svg>
             </button>
         </div>
-        <form method="POST" action="/kinarahub/customers/<?= (int)($customer['id'] ?? 0) ?>/payments" class="px-6 py-5 space-y-4">
+        <form method="POST" action="<?= APP_URL ?>/customers/<?= (int)($customer['id'] ?? 0) ?>/payments" class="px-6 py-5 space-y-4">
             <?= \App\Middleware\CsrfMiddleware::field() ?>
 
             <div class="rounded-xl bg-gray-50 dark:bg-gray-700/30 p-3 text-center">

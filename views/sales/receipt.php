@@ -317,7 +317,7 @@
         Print Again
     </button>
     <br>
-    <a href="/kinarahub/sales/<?= (int)($sale['id'] ?? 0) ?>" class="btn-back">Back to sale details</a>
+    <a href="<?= APP_URL ?>/sales/<?= (int)($sale['id'] ?? 0) ?>" class="btn-back">Back to sale details</a>
 </div>
 
 <script>

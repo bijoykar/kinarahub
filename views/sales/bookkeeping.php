@@ -23,7 +23,7 @@ $errors    = $errors ?? [];
     <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Record a past sale manually</p>
 </div>
 
-<form method="POST" action="/kinarahub/sales" class="space-y-6 max-w-4xl" id="bookkeeping-form">
+<form method="POST" action="<?= APP_URL ?>/sales" class="space-y-6 max-w-4xl" id="bookkeeping-form">
     <?= \App\Middleware\CsrfMiddleware::field() ?>
     <input type="hidden" name="entry_mode" value="booking">
 

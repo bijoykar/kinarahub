@@ -61,7 +61,7 @@ $errorMessage = $errorMessage ?? '';
             <label for="login-password" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
                 Password
             </label>
-            <a href="/kinarahub/forgot-password" class="text-xs font-medium text-brand-600 dark:text-brand-400 hover:text-brand-700 dark:hover:text-brand-300 transition-colors">
+            <a href="<?= APP_URL ?>/forgot-password" class="text-xs font-medium text-brand-600 dark:text-brand-400 hover:text-brand-700 dark:hover:text-brand-300 transition-colors">
                 Forgot password?
             </a>
         </div>
@@ -111,7 +111,7 @@ $errorMessage = $errorMessage ?? '';
 <div class="mt-6 text-center">
     <p class="text-sm text-gray-500 dark:text-gray-400">
         Don't have an account?
-        <a href="/kinarahub/register" class="font-semibold text-brand-600 dark:text-brand-400 hover:text-brand-700 dark:hover:text-brand-300 transition-colors">
+        <a href="<?= htmlspecialchars(APP_URL, ENT_QUOTES, 'UTF-8') ?>/register" class="font-semibold text-brand-600 dark:text-brand-400 hover:text-brand-700 dark:hover:text-brand-300 transition-colors">
             Register your store
         </a>
     </p>

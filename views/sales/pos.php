@@ -124,7 +124,7 @@ $csrfToken = $csrfToken ?? '';
             </div>
 
             <!-- Submit -->
-            <form id="pos-form" method="POST" action="/kinarahub/sales">
+            <form id="pos-form" method="POST" action="<?= APP_URL ?>/sales">
                 <?= \App\Middleware\CsrfMiddleware::field() ?>
                 <input type="hidden" name="entry_mode" value="pos">
                 <input type="hidden" id="pos-cart-data" name="cart_data" value="[]">

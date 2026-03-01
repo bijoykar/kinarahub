@@ -64,7 +64,7 @@ $stats = $stats ?? [
     </div>
 
     <!-- Pending Verification -->
-    <a href="/kinarahub/admin/stores?status=pending_verification" class="rounded-xl bg-white dark:bg-gray-800 p-5 shadow-sm ring-1 ring-gray-200 dark:ring-gray-700 hover:ring-amber-300 dark:hover:ring-amber-600 transition-all group">
+    <a href="<?= APP_URL ?>/admin/stores?status=pending_verification" class="rounded-xl bg-white dark:bg-gray-800 p-5 shadow-sm ring-1 ring-gray-200 dark:ring-gray-700 hover:ring-amber-300 dark:hover:ring-amber-600 transition-all group">
         <div class="flex items-center justify-between mb-3">
             <span class="text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">Pending</span>
             <div class="flex h-9 w-9 items-center justify-center rounded-lg bg-amber-100 dark:bg-amber-900/30">
@@ -78,7 +78,7 @@ $stats = $stats ?? [
     </a>
 
     <!-- Suspended Stores -->
-    <a href="/kinarahub/admin/stores?status=suspended" class="rounded-xl bg-white dark:bg-gray-800 p-5 shadow-sm ring-1 ring-gray-200 dark:ring-gray-700 hover:ring-red-300 dark:hover:ring-red-600 transition-all group">
+    <a href="<?= APP_URL ?>/admin/stores?status=suspended" class="rounded-xl bg-white dark:bg-gray-800 p-5 shadow-sm ring-1 ring-gray-200 dark:ring-gray-700 hover:ring-red-300 dark:hover:ring-red-600 transition-all group">
         <div class="flex items-center justify-between mb-3">
             <span class="text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">Suspended</span>
             <div class="flex h-9 w-9 items-center justify-center rounded-lg bg-red-100 dark:bg-red-900/30">
@@ -126,7 +126,7 @@ $stats = $stats ?? [
 <div class="rounded-xl bg-white dark:bg-gray-800 p-5 shadow-sm ring-1 ring-gray-200 dark:ring-gray-700">
     <h2 class="text-base font-semibold text-gray-900 dark:text-white mb-4">Quick Actions</h2>
     <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-        <a href="/kinarahub/admin/stores" class="flex items-center gap-3 rounded-xl bg-gray-50 dark:bg-gray-700/50 px-4 py-3.5 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors group">
+        <a href="<?= APP_URL ?>/admin/stores" class="flex items-center gap-3 rounded-xl bg-gray-50 dark:bg-gray-700/50 px-4 py-3.5 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors group">
             <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-100 dark:bg-blue-900/30">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-600 dark:text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 21h16.5M4.5 3h15M5.25 3v18m13.5-18v18M9 6.75h1.5m-1.5 3h1.5m-1.5 3h1.5m3-6H15m-1.5 3H15m-1.5 3H15M9 21v-3.375c0-.621.504-1.125 1.125-1.125h3.75c.621 0 1.125.504 1.125 1.125V21"/></svg>
             </div>
@@ -136,7 +136,7 @@ $stats = $stats ?? [
             </div>
         </a>
 
-        <a href="/kinarahub/admin/stores?status=pending_verification" class="flex items-center gap-3 rounded-xl bg-gray-50 dark:bg-gray-700/50 px-4 py-3.5 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors group">
+        <a href="<?= APP_URL ?>/admin/stores?status=pending_verification" class="flex items-center gap-3 rounded-xl bg-gray-50 dark:bg-gray-700/50 px-4 py-3.5 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors group">
             <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-amber-100 dark:bg-amber-900/30">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-amber-600 dark:text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z"/></svg>
             </div>
@@ -146,7 +146,7 @@ $stats = $stats ?? [
             </div>
         </a>
 
-        <a href="/kinarahub/admin/stores?status=suspended" class="flex items-center gap-3 rounded-xl bg-gray-50 dark:bg-gray-700/50 px-4 py-3.5 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors group">
+        <a href="<?= APP_URL ?>/admin/stores?status=suspended" class="flex items-center gap-3 rounded-xl bg-gray-50 dark:bg-gray-700/50 px-4 py-3.5 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors group">
             <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-red-100 dark:bg-red-900/30">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-red-600 dark:text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"/></svg>
             </div>

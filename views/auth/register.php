@@ -18,7 +18,7 @@ $csrfToken = $csrfToken ?? '';
 <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-1">Create your store</h2>
 <p class="text-sm text-gray-500 dark:text-gray-400 mb-6">Set up your Kinara Store Hub account in seconds</p>
 
-<form method="POST" action="/kinarahub/register" class="space-y-4" novalidate>
+<form method="POST" action="<?= APP_URL ?>/register" class="space-y-4" novalidate>
     <?= \App\Middleware\CsrfMiddleware::field() ?>
 
     <!-- Store Name -->
@@ -192,7 +192,7 @@ $csrfToken = $csrfToken ?? '';
 <div class="mt-6 text-center">
     <p class="text-sm text-gray-500 dark:text-gray-400">
         Already have an account?
-        <a href="/kinarahub/login" class="font-semibold text-brand-600 dark:text-brand-400 hover:text-brand-700 dark:hover:text-brand-300 transition-colors">
+        <a href="<?= APP_URL ?>/login" class="font-semibold text-brand-600 dark:text-brand-400 hover:text-brand-700 dark:hover:text-brand-300 transition-colors">
             Sign in
         </a>
     </p>

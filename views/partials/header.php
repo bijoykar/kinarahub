@@ -42,7 +42,7 @@ $staffName  = htmlspecialchars($_SESSION['staff_name'] ?? 'Staff', ENT_QUOTES, '
             <!-- Home icon (always first) -->
             <li>
                 <a
-                    href="/kinarahub/dashboard"
+                    href="<?= APP_URL ?>/dashboard"
                     class="flex items-center text-gray-400 hover:text-brand-600 dark:text-gray-500 dark:hover:text-brand-400 transition-colors duration-150 rounded focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500"
                     aria-label="Dashboard home"
                 >
@@ -145,7 +145,7 @@ $staffName  = htmlspecialchars($_SESSION['staff_name'] ?? 'Staff', ENT_QUOTES, '
 
         <!-- Logout link -->
         <a
-            href="/kinarahub/logout"
+            href="<?= APP_URL ?>/logout"
             class="inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium text-gray-600 hover:bg-red-50 hover:text-red-600 dark:text-gray-400 dark:hover:bg-red-900/20 dark:hover:text-red-400 transition-colors duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-500"
             aria-label="Sign out"
         >

@@ -97,13 +97,14 @@
     $adminEmail = htmlspecialchars($_SESSION['admin_email'] ?? '', ENT_QUOTES, 'UTF-8');
 
     $navItems = [
-        ['label' => 'Dashboard', 'href' => '/kinarahub/admin/dashboard'],
-        ['label' => 'Stores',    'href' => '/kinarahub/admin/stores'],
+        ['label' => 'Dashboard', 'href' => APP_URL . '/admin/dashboard'],
+        ['label' => 'Stores',    'href' => APP_URL . '/admin/stores'],
     ];
 
     function adminIsNavActive(string $href, string $currentPath): bool {
-        $hrefPath = parse_url($href, PHP_URL_PATH);
-        if ($hrefPath === '/kinarahub/admin/dashboard') {
+        $hrefPath    = parse_url($href, PHP_URL_PATH);
+        $appBasePath = rtrim((string)(parse_url(APP_URL, PHP_URL_PATH) ?? ''), '/');
+        if ($hrefPath === $appBasePath . '/admin/dashboard') {
             return rtrim($currentPath, '/') === rtrim($hrefPath, '/');
         }
         return str_starts_with(rtrim($currentPath, '/'), rtrim($hrefPath, '/'));
@@ -119,7 +120,7 @@
         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
         Viewing <strong class="mx-1"><?= htmlspecialchars($_SESSION['impersonate_store_name'] ?? 'Store', ENT_QUOTES, 'UTF-8') ?></strong> &mdash; Read Only
     </div>
-    <a href="/kinarahub/admin/impersonate/exit" class="inline-flex items-center gap-1 rounded-lg bg-amber-600 px-3 py-1 text-xs font-semibold text-white hover:bg-amber-700 transition-colors">
+    <a href="<?= APP_URL ?>/admin/impersonate/exit" class="inline-flex items-center gap-1 rounded-lg bg-amber-600 px-3 py-1 text-xs font-semibold text-white hover:bg-amber-700 transition-colors">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
         Exit
     </a>
@@ -136,7 +137,7 @@
             <!-- Left: Logo + Nav -->
             <div class="flex items-center gap-8">
                 <!-- Logo -->
-                <a href="/kinarahub/admin/dashboard" class="flex items-center gap-2.5 group">
+                <a href="<?= APP_URL ?>/admin/dashboard" class="flex items-center gap-2.5 group">
                     <div class="flex h-9 w-9 items-center justify-center rounded-lg bg-admin-600 text-white font-bold text-sm shadow-sm shadow-admin-600/30 group-hover:bg-admin-700 transition-colors">
                         K
                     </div>
@@ -186,7 +187,7 @@
 
                 <!-- Logout -->
                 <a
-                    href="/kinarahub/admin/logout"
+                    href="<?= APP_URL ?>/admin/logout"
                     class="inline-flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-red-600 dark:hover:text-red-400 transition-colors duration-150"
                     title="Sign out"
                 >
@@ -222,7 +223,7 @@
     <nav aria-label="Breadcrumb">
         <ol class="flex items-center gap-1.5 text-sm" role="list">
             <li>
-                <a href="/kinarahub/admin/dashboard" class="text-gray-400 hover:text-admin-600 dark:hover:text-admin-400 transition-colors">
+                <a href="<?= APP_URL ?>/admin/dashboard" class="text-gray-400 hover:text-admin-600 dark:hover:text-admin-400 transition-colors">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"/></svg>
                     <span class="sr-only">Home</span>
                 </a>

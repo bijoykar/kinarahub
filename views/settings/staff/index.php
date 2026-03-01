@@ -170,7 +170,7 @@ $defaultRoleBadge = 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-3
             </button>
         </div>
         <!-- Body -->
-        <form id="staff-form" method="POST" action="/kinarahub/settings/staff" class="px-6 py-5 space-y-4">
+        <form id="staff-form" method="POST" action="<?= APP_URL ?>/settings/staff" class="px-6 py-5 space-y-4">
             <?= \App\Middleware\CsrfMiddleware::field() ?>
             <input type="hidden" id="staff-id" name="id" value="">
             <input type="hidden" id="staff-method" name="_method" value="POST">
@@ -352,7 +352,7 @@ $defaultRoleBadge = 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-3
         if (isEdit) {
             title.textContent = 'Edit staff member';
             submitText.textContent = 'Save changes';
-            form.action = '/kinarahub/settings/staff/' + member.id;
+            form.action = '<?= APP_URL ?>/settings/staff/' + member.id;
             document.getElementById('staff-id').value = member.id;
             document.getElementById('staff-method').value = 'PUT';
             document.getElementById('staff-name').value = member.name || '';
@@ -367,7 +367,7 @@ $defaultRoleBadge = 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-3
         } else {
             title.textContent = 'Add staff member';
             submitText.textContent = 'Add staff';
-            form.action = '/kinarahub/settings/staff';
+            form.action = '<?= APP_URL ?>/settings/staff';
             document.getElementById('staff-id').value = '';
             document.getElementById('staff-method').value = 'POST';
             document.getElementById('staff-name').value = '';
@@ -435,7 +435,7 @@ $defaultRoleBadge = 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-3
     // Delete staff
     window.confirmDeleteStaff = function (id, name) {
         document.getElementById('delete-staff-name').textContent = name;
-        document.getElementById('delete-staff-form').action = '/kinarahub/settings/staff/' + id + '/delete';
+        document.getElementById('delete-staff-form').action = '<?= APP_URL ?>/settings/staff/' + id + '/delete';
         openModal('modal-delete-staff');
     };
 })();

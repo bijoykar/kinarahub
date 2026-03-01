@@ -20,7 +20,7 @@ $pageTitle = '404 — Page Not Found | Kinara Store Hub';
 
 // Detect whether the user is authenticated (to show a more helpful link).
 $isAuthenticated = !empty($_SESSION['staff_id']);
-$homeHref        = $isAuthenticated ? '/kinarahub/dashboard' : '/kinarahub/login';
+$homeHref        = $isAuthenticated ? APP_URL . '/dashboard' : APP_URL . '/login';
 $homeLabel       = $isAuthenticated ? 'Go to Dashboard' : 'Back to Login';
 ?>
 <!DOCTYPE html>

@@ -46,7 +46,7 @@ $resent    = $resent ?? false;
     <?php endif; ?>
 
     <!-- Resend form -->
-    <form method="POST" action="/kinarahub/verify/resend" class="mb-4">
+    <form method="POST" action="<?= APP_URL ?>/verify/resend" class="mb-4">
         <?= \App\Middleware\CsrfMiddleware::field() ?>
         <input type="hidden" name="email" value="<?= htmlspecialchars($email, ENT_QUOTES, 'UTF-8') ?>">
         <button
@@ -62,7 +62,7 @@ $resent    = $resent ?? false;
     </form>
 
     <!-- Back to login -->
-    <a href="/kinarahub/login" class="inline-flex items-center gap-1.5 text-sm font-medium text-brand-600 dark:text-brand-400 hover:text-brand-700 dark:hover:text-brand-300 transition-colors">
+    <a href="<?= APP_URL ?>/login" class="inline-flex items-center gap-1.5 text-sm font-medium text-brand-600 dark:text-brand-400 hover:text-brand-700 dark:hover:text-brand-300 transition-colors">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75" aria-hidden="true">
             <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"/>
         </svg>

@@ -24,7 +24,7 @@ $badge = $statusBadges[$status] ?? $statusBadges['active'];
 <!-- Page header -->
 <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
     <div class="flex items-center gap-3">
-        <a href="/kinarahub/admin/stores" class="inline-flex items-center justify-center rounded-lg p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 dark:hover:text-gray-300 dark:hover:bg-gray-700 transition-colors" aria-label="Back to stores">
+        <a href="<?= APP_URL ?>/admin/stores" class="inline-flex items-center justify-center rounded-lg p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 dark:hover:text-gray-300 dark:hover:bg-gray-700 transition-colors" aria-label="Back to stores">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"/></svg>
         </a>
         <div>
@@ -41,7 +41,7 @@ $badge = $statusBadges[$status] ?? $statusBadges['active'];
 
     <div class="flex flex-wrap items-center gap-2">
         <!-- Browse Store (View Only) — impersonation -->
-        <form method="POST" action="/kinarahub/admin/impersonate/<?= (int)$store['id'] ?>">
+        <form method="POST" action="<?= APP_URL ?>/admin/impersonate/<?= (int)$store['id'] ?>">
             <?= \App\Middleware\CsrfMiddleware::field() ?>
             <button type="submit" class="inline-flex items-center gap-2 rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm shadow-blue-600/30 hover:bg-blue-700 transition-colors">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75"><path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
@@ -51,7 +51,7 @@ $badge = $statusBadges[$status] ?? $statusBadges['active'];
 
         <?php if ($status === 'active'): ?>
         <!-- Suspend -->
-        <form method="POST" action="/kinarahub/admin/stores/<?= (int)$store['id'] ?>/suspend" id="detail-suspend-form">
+        <form method="POST" action="<?= APP_URL ?>/admin/stores/<?= (int)$store['id'] ?>/suspend" id="detail-suspend-form">
             <?= \App\Middleware\CsrfMiddleware::field() ?>
             <button
                 type="button"
@@ -64,7 +64,7 @@ $badge = $statusBadges[$status] ?? $statusBadges['active'];
         </form>
         <?php elseif ($status === 'suspended'): ?>
         <!-- Activate -->
-        <form method="POST" action="/kinarahub/admin/stores/<?= (int)$store['id'] ?>/activate" id="detail-activate-form">
+        <form method="POST" action="<?= APP_URL ?>/admin/stores/<?= (int)$store['id'] ?>/activate" id="detail-activate-form">
             <?= \App\Middleware\CsrfMiddleware::field() ?>
             <button
                 type="button"

@@ -41,7 +41,7 @@ $moduleIcons = [
 <!-- Page header -->
 <div class="flex items-center gap-3 mb-6">
     <a
-        href="/kinarahub/settings/roles"
+        href="<?= APP_URL ?>/settings/roles"
         class="inline-flex items-center justify-center rounded-lg p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 dark:hover:text-gray-300 dark:hover:bg-gray-700 transition-colors duration-150"
         aria-label="Back to roles"
     >
@@ -59,7 +59,7 @@ $moduleIcons = [
 
 <form
     method="POST"
-    action="<?= $isNew ? '/kinarahub/settings/roles' : '/kinarahub/settings/roles/' . (int)$role['id'] ?>"
+    action="<?= $isNew ? APP_URL . '/settings/roles' : APP_URL . '/settings/roles/' . (int)$role['id'] ?>"
     class="space-y-6"
 >
     <?= \App\Middleware\CsrfMiddleware::field() ?>
@@ -192,7 +192,7 @@ $moduleIcons = [
     <!-- Actions -->
     <div class="flex items-center justify-end gap-3 pt-2">
         <a
-            href="/kinarahub/settings/roles"
+            href="<?= APP_URL ?>/settings/roles"
             class="rounded-xl px-5 py-2.5 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 ring-1 ring-inset ring-gray-300 dark:ring-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors duration-150"
         >
             Cancel

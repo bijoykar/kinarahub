@@ -27,7 +27,7 @@ $storeName = $storeName ?? '';
     <?php endif; ?>
 </p>
 
-<form method="POST" action="/kinarahub/setup" enctype="multipart/form-data" class="space-y-5" novalidate>
+<form method="POST" action="<?= APP_URL ?>/setup" enctype="multipart/form-data" class="space-y-5" novalidate>
     <?= \App\Middleware\CsrfMiddleware::field() ?>
 
     <!-- Logo Upload -->
@@ -179,7 +179,7 @@ $storeName = $storeName ?? '';
             Save and continue
         </button>
         <a
-            href="/kinarahub/dashboard"
+            href="<?= APP_URL ?>/dashboard"
             class="flex w-full items-center justify-center gap-2 rounded-xl bg-white dark:bg-gray-700 px-4 py-2.5 text-sm font-medium text-gray-600 dark:text-gray-300 ring-1 ring-inset ring-gray-300 dark:ring-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors duration-150"
         >
             Skip for now

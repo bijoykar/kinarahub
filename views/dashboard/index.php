@@ -89,7 +89,7 @@ $stockDist     = $stats['stock_distribution'] ?? ['labels' => [], 'counts' => []
     </div>
 
     <!-- Out of Stock -->
-    <a href="/kinarahub/inventory?status=out_of_stock" class="rounded-2xl bg-white dark:bg-gray-800 p-5 shadow-sm ring-1 ring-gray-200 dark:ring-gray-700 hover:ring-red-300 dark:hover:ring-red-600/50 transition-all group">
+    <a href="<?= APP_URL ?>/inventory?status=out_of_stock" class="rounded-2xl bg-white dark:bg-gray-800 p-5 shadow-sm ring-1 ring-gray-200 dark:ring-gray-700 hover:ring-red-300 dark:hover:ring-red-600/50 transition-all group">
         <div class="flex items-center gap-3 mb-3">
             <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"/></svg>
@@ -100,7 +100,7 @@ $stockDist     = $stats['stock_distribution'] ?? ['labels' => [], 'counts' => []
     </a>
 
     <!-- Low Stock -->
-    <a href="/kinarahub/inventory?status=low_stock" class="rounded-2xl bg-white dark:bg-gray-800 p-5 shadow-sm ring-1 ring-gray-200 dark:ring-gray-700 hover:ring-amber-300 dark:hover:ring-amber-600/50 transition-all group">
+    <a href="<?= APP_URL ?>/inventory?status=low_stock" class="rounded-2xl bg-white dark:bg-gray-800 p-5 shadow-sm ring-1 ring-gray-200 dark:ring-gray-700 hover:ring-amber-300 dark:hover:ring-amber-600/50 transition-all group">
         <div class="flex items-center gap-3 mb-3">
             <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-50 dark:bg-amber-900/20 text-amber-600 dark:text-amber-400">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75"><path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"/></svg>
@@ -300,7 +300,7 @@ $stockDist     = $stats['stock_distribution'] ?? ['labels' => [], 'counts' => []
         btn.className = 'trend-btn rounded-md px-3 py-1 text-xs font-medium transition-colors bg-white dark:bg-gray-600 text-gray-900 dark:text-white shadow-sm';
 
         // AJAX fetch new data.
-        fetch('/kinarahub/dashboard/chart-data?type=sales_trend&period=' + period)
+        fetch('<?= APP_URL ?>/dashboard/chart-data?type=sales_trend&period=' + period)
             .then(function (r) { return r.json(); })
             .then(function (data) {
                 salesTrendChart.data.labels = data.labels;
