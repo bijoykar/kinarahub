@@ -1,0 +1,28 @@
+Options -Indexes
+
+# Enable the rewrite engine
+RewriteEngine On
+
+# If the request URI begins with /kinarahub, strip that prefix so the
+# rewrite rules below work regardless of the sub-directory install.
+# (Adjust RewriteBase if the app lives at a different sub-path.)
+RewriteBase /kinarahub/
+
+# --- Security headers ---
+<IfModule mod_headers.c>
+    Header always set X-Content-Type-Options "nosniff"
+    Header always set X-Frame-Options "SAMEORIGIN"
+    Header always set X-XSS-Protection "1; mode=block"
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+</IfModule>
+
+# --- Block direct access to sensitive directories and files ---
+RewriteRule ^(app|config|vendor|tests|\.env.*)(/|$) - [F,L]
+
+# --- Do NOT rewrite requests for real files or directories ---
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+
+# --- Funnel everything else through the front controller ---
+RewriteRule ^ public/index.php [QSA,L]

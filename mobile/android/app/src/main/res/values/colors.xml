@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Primary brand colors -->
+    <color name="primary">#2563EB</color>
+    <color name="primary_dark">#1D4ED8</color>
+    <color name="primary_light">#60A5FA</color>
+    <color name="on_primary">#FFFFFF</color>
+
+    <!-- Secondary -->
+    <color name="secondary">#7C3AED</color>
+    <color name="on_secondary">#FFFFFF</color>
+
+    <!-- Background -->
+    <color name="background">#F8FAFC</color>
+    <color name="surface">#FFFFFF</color>
+    <color name="on_background">#0F172A</color>
+    <color name="on_surface">#1E293B</color>
+
+    <!-- Stock status -->
+    <color name="stock_in">#16A34A</color>
+    <color name="stock_low">#D97706</color>
+    <color name="stock_out">#DC2626</color>
+
+    <!-- Semantic -->
+    <color name="error">#DC2626</color>
+    <color name="success">#16A34A</color>
+    <color name="warning">#D97706</color>
+</resources>

@@ -1,0 +1,43 @@
+Options -Indexes
+
+# ---------------------------------------------------------------------------
+# Enable rewrite engine
+# ---------------------------------------------------------------------------
+RewriteEngine On
+RewriteBase /kinarahub/public/
+
+# ---------------------------------------------------------------------------
+# Security headers
+# ---------------------------------------------------------------------------
+<IfModule mod_headers.c>
+    Header always set X-Content-Type-Options "nosniff"
+    Header always set X-Frame-Options "SAMEORIGIN"
+    Header always set X-XSS-Protection "1; mode=block"
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+    Header always set Permissions-Policy "camera=(), microphone=(), geolocation=()"
+</IfModule>
+
+# ---------------------------------------------------------------------------
+# Block direct access to any .php file EXCEPT index.php itself
+# ---------------------------------------------------------------------------
+RewriteCond %{THE_REQUEST} \.(php) [NC]
+RewriteCond %{REQUEST_URI} !^/kinarahub/public/index\.php [NC]
+RewriteRule \.php$ - [F,L]
+
+# ---------------------------------------------------------------------------
+# Allow real static files (css, js, images, fonts) to pass through
+# without touching the front controller
+# ---------------------------------------------------------------------------
+RewriteCond %{REQUEST_FILENAME} -f
+RewriteRule \.(css|js|png|jpg|jpeg|gif|webp|svg|ico|woff|woff2|ttf|eot|map)$ - [L]
+
+# ---------------------------------------------------------------------------
+# Allow real directories to pass through (e.g. /public/assets/)
+# ---------------------------------------------------------------------------
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+
+# ---------------------------------------------------------------------------
+# Funnel every other request through the front controller
+# ---------------------------------------------------------------------------
+RewriteRule ^ index.php [QSA,L]

@@ -1,0 +1,8 @@
+// KinaraHub-Release.xcconfig
+// Release configuration
+
+API_BASE_URL = https://api.kinarahub.com/api/v1
+BUNDLE_IDENTIFIER = com.kinarahub.ios
+PRODUCT_NAME = KinaraHub
+MARKETING_VERSION = 1.0.0
+CURRENT_PROJECT_VERSION = 1
