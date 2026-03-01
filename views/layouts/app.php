@@ -299,16 +299,19 @@ if (!empty($_SESSION['impersonate_store_id'])):
                     </p>
                 </div>
                 <!-- Logout button -->
-                <a
-                    href="/kinarahub/logout"
-                    class="flex-shrink-0 rounded-md p-1.5 text-slate-400 hover:bg-slate-800 hover:text-red-400 transition-colors duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500"
-                    title="Sign out"
-                    aria-label="Sign out"
-                >
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75" aria-hidden="true">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75"/>
-                    </svg>
-                </a>
+                <form method="POST" action="<?= APP_URL ?>/logout" class="flex-shrink-0">
+                    <?= \App\Middleware\CsrfMiddleware::field() ?>
+                    <button
+                        type="submit"
+                        class="rounded-md p-1.5 text-slate-400 hover:bg-slate-800 hover:text-red-400 transition-colors duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500"
+                        title="Sign out"
+                        aria-label="Sign out"
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75"/>
+                        </svg>
+                    </button>
+                </form>
             </div>
         </div>
     </aside>
