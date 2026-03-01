@@ -116,3 +116,8 @@ start with phase 1 and complete all
 
 ## 14
 start with remaining phase run all agest parallaly
+
+---
+
+## 15
+test all pages and fix any remaining issues
