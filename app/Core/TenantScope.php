@@ -157,16 +157,33 @@ class TenantScope
     // -----------------------------------------------------------------------
 
     /**
-     * Determine whether a SQL string already contains a WHERE clause.
+     * Determine whether a SQL string already contains a top-level WHERE clause.
      *
-     * Uses a word-boundary regex to avoid false positives from column names
-     * like "somewhere" or string literals containing "where".
+     * Strips all parenthesised subexpressions (subqueries, function calls) before
+     * checking, so that a WHERE inside a correlated subquery is not mistaken for
+     * a WHERE in the outer query.
      *
      * @param  string $sql
      * @return bool
      */
     private static function sqlHasWhere(string $sql): bool
     {
-        return (bool) preg_match('/\bWHERE\b/i', $sql);
+        // Walk the string and collect only characters at nesting depth 0.
+        $depth    = 0;
+        $outerSql = '';
+        $len      = strlen($sql);
+
+        for ($i = 0; $i < $len; $i++) {
+            $c = $sql[$i];
+            if ($c === '(') {
+                $depth++;
+            } elseif ($c === ')') {
+                $depth--;
+            } elseif ($depth === 0) {
+                $outerSql .= $c;
+            }
+        }
+
+        return (bool) preg_match('/\bWHERE\b/i', $outerSql);
     }
 }
