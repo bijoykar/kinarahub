@@ -129,16 +129,18 @@ class Database
     /**
      * Merge $overrideConfig with the .env defaults into a complete config map.
      *
-     * @param  array{host?: string, name?: string, user?: string, pass?: string} $override
-     * @return array{host: string, name: string, user: string, pass: string}
+     * @param  array{host?: string, port?: int, name?: string, user?: string, pass?: string, ssl_ca?: string} $override
+     * @return array{host: string, port: int, name: string, user: string, pass: string, ssl_ca: string}
      */
     private static function resolveConfig(array $override): array
     {
         return [
-            'host' => $override['host'] ?? $_ENV['DB_HOST'] ?? 'localhost',
-            'name' => $override['name'] ?? $_ENV['DB_NAME'] ?? 'kinarahub',
-            'user' => $override['user'] ?? $_ENV['DB_USER'] ?? 'root',
-            'pass' => $override['pass'] ?? $_ENV['DB_PASS'] ?? '',
+            'host'   => $override['host']   ?? $_ENV['DB_HOST']   ?? 'localhost',
+            'port'   => (int) ($override['port'] ?? $_ENV['DB_PORT'] ?? 3306),
+            'name'   => $override['name']   ?? $_ENV['DB_NAME']   ?? 'kinarahub',
+            'user'   => $override['user']   ?? $_ENV['DB_USER']   ?? 'root',
+            'pass'   => $override['pass']   ?? $_ENV['DB_PASS']   ?? '',
+            'ssl_ca' => $override['ssl_ca'] ?? $_ENV['DB_SSL_CA'] ?? '',
         ];
     }
 
@@ -157,6 +159,7 @@ class Database
     {
         $fingerprint = implode('|', [
             $config['host'],
+            $config['port'],
             $config['name'],
             $config['user'],
             strlen($config['pass']),   // length only — never store plaintext
@@ -177,8 +180,9 @@ class Database
     {
         $charset = 'utf8mb4';
         $dsn     = sprintf(
-            'mysql:host=%s;dbname=%s;charset=%s',
+            'mysql:host=%s;port=%d;dbname=%s;charset=%s',
             $config['host'],
+            $config['port'],
             $config['name'],
             $charset
         );
@@ -190,6 +194,13 @@ class Database
             PDO::ATTR_PERSISTENT         => false,
             PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES '{$charset}' COLLATE 'utf8mb4_unicode_ci'",
         ];
+
+        // Enable SSL in non-development environments when DB_SSL_CA is set.
+        $env = $_ENV['APP_ENV'] ?? 'production';
+        if ($env !== 'development' && $config['ssl_ca'] !== '') {
+            $options[PDO::MYSQL_ATTR_SSL_CA]                  = $config['ssl_ca'];
+            $options[PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT]  = true;
+        }
 
         try {
             return new PDO($dsn, $config['user'], $config['pass'], $options);
