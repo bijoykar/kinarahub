@@ -31,7 +31,10 @@ use App\Middleware\PermissionMiddleware;
 // Public routes (no authentication required)
 // ---------------------------------------------------------------------------
 
-$router->get('/', 'HomeController@index');
+$router->get('/', function () {
+    header('Location: ' . APP_URL . '/login');
+    exit;
+});
 
 // ---------------------------------------------------------------------------
 // Auth routes — Phase 3: Registration, Verification, Login, Logout, Setup

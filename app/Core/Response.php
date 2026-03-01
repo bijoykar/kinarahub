@@ -143,12 +143,35 @@ class Response
     /**
      * Send an HTTP redirect response and exit.
      *
+     * Root-relative paths (starting with "/") are automatically resolved to
+     * absolute URLs using APP_URL so that sub-directory installs work correctly.
+     *
+     * Examples with APP_URL = "http://localhost/kinarahub":
+     *   /dashboard               → http://localhost/kinarahub/dashboard
+     *   /kinarahub/admin/stores  → http://localhost/kinarahub/admin/stores
+     *   https://example.com      → https://example.com  (unchanged)
+     *
      * @param  string $url   Target URL (absolute or root-relative).
      * @param  int    $code  HTTP status code — 301 (permanent) or 302 (temporary).
      * @return never
      */
     public static function redirect(string $url, int $code = 302): never
     {
+        // Resolve root-relative paths to absolute URLs.
+        if (str_starts_with($url, '/') && defined('APP_URL')) {
+            $basePath = rtrim((string)(parse_url(APP_URL, PHP_URL_PATH) ?? ''), '/');
+
+            if ($basePath !== '' && !str_starts_with($url, $basePath)) {
+                // Short path (e.g. /dashboard) — prepend full APP_URL.
+                $url = APP_URL . $url;
+            } elseif ($basePath !== '') {
+                // Already carries the base path (e.g. /kinarahub/admin/...) — make absolute.
+                $scheme = (string)(parse_url(APP_URL, PHP_URL_SCHEME) ?? 'http');
+                $host   = (string)(parse_url(APP_URL, PHP_URL_HOST)   ?? 'localhost');
+                $url    = $scheme . '://' . $host . $url;
+            }
+        }
+
         self::setStatusCode($code);
         header('Location: ' . $url, true, $code);
 

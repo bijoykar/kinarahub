@@ -59,6 +59,12 @@ if (session_status() === PHP_SESSION_NONE) {
 // ---------------------------------------------------------------------------
 // 5. Build the Request object (wraps $_GET, $_POST, $_SERVER, headers …)
 // ---------------------------------------------------------------------------
+
+// The public/ directory is hidden from URLs by mod_rewrite, so SCRIPT_NAME
+// is /kinarahub/public/index.php but request URIs start with /kinarahub/.
+// Move SCRIPT_NAME up one level so Request::path() strips the right prefix.
+$_SERVER['SCRIPT_NAME'] = dirname(dirname($_SERVER['SCRIPT_NAME'])) . '/index.php';
+
 $request = new App\Core\Request();
 
 // ---------------------------------------------------------------------------

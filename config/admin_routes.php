@@ -22,8 +22,7 @@ use App\Middleware\CsrfMiddleware;
 
 // Root redirect: /admin/ → /admin/login
 $router->get('/', function () {
-    header('Location: /kinarahub/admin/login');
-    exit;
+    App\Core\Response::redirect('/kinarahub/admin/login');
 });
 
 $router->get('/login',  'Admin\AdminAuthController@showLogin');
