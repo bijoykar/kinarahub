@@ -47,33 +47,36 @@ if (!defined('ENV_LOADED')) {
 // ---------------------------------------------------------------------------
 // Timezone — must be set before any date/time calls.
 // ---------------------------------------------------------------------------
-define('TIMEZONE', 'Asia/Kolkata');
+if (!defined('TIMEZONE')) {
+    define('TIMEZONE', 'Asia/Kolkata');
+}
 date_default_timezone_set(TIMEZONE);
 
 // ---------------------------------------------------------------------------
-// Application constants.
+// Application constants — guard each with defined() so this file is safe
+// to require_once from multiple entry points (public/index.php, admin/index.php).
 // ---------------------------------------------------------------------------
 
 /** Currency ISO code used throughout the application. */
-define('CURRENCY', 'INR');
+defined('CURRENCY')        || define('CURRENCY', 'INR');
 
 /** Human-readable currency symbol rendered in views. */
-define('CURRENCY_SYMBOL', '₹');
+defined('CURRENCY_SYMBOL') || define('CURRENCY_SYMBOL', '₹');
 
 /** Default number of records returned per paginated page. */
-define('PER_PAGE', 25);
+defined('PER_PAGE')        || define('PER_PAGE', 25);
 
 /** JWT signing secret from .env. */
-define('JWT_SECRET', $_ENV['JWT_SECRET'] ?? '');
+defined('JWT_SECRET')      || define('JWT_SECRET', $_ENV['JWT_SECRET'] ?? '');
 
 /** JWT access token lifetime in seconds (15 minutes). */
-define('JWT_ACCESS_TTL', (int) ($_ENV['JWT_ACCESS_TTL'] ?? 900));
+defined('JWT_ACCESS_TTL')  || define('JWT_ACCESS_TTL', (int) ($_ENV['JWT_ACCESS_TTL'] ?? 900));
 
 /** JWT refresh token lifetime in seconds (30 days). */
-define('JWT_REFRESH_TTL', (int) ($_ENV['JWT_REFRESH_TTL'] ?? 2592000));
+defined('JWT_REFRESH_TTL') || define('JWT_REFRESH_TTL', (int) ($_ENV['JWT_REFRESH_TTL'] ?? 2592000));
 
 /** Canonical public URL of the application (no trailing slash). */
-define('APP_URL', rtrim($_ENV['APP_URL'] ?? 'http://localhost/kinarahub', '/'));
+defined('APP_URL')         || define('APP_URL', rtrim($_ENV['APP_URL'] ?? 'http://localhost/kinarahub', '/'));
 
 /**
  * Execution environment.
