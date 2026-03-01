@@ -88,6 +88,8 @@
         .no-transition, .no-transition * {
             transition: none !important;
         }
+        /* Ensure [hidden] always wins over Tailwind display utilities (flex, block, etc.) */
+        [hidden] { display: none !important; }
         /* Sidebar scrollbar styling */
         #app-sidebar::-webkit-scrollbar { width: 4px; }
         #app-sidebar::-webkit-scrollbar-track { background: transparent; }

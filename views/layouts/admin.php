@@ -82,6 +82,7 @@
         .no-transition, .no-transition * {
             transition: none !important;
         }
+        [hidden] { display: none !important; }
     </style>
 </head>
 
