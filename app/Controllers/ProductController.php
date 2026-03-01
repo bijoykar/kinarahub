@@ -38,8 +38,7 @@ class ProductController
         $totalPages = max(1, (int) ceil($data['total'] / $perPage));
 
         // Check if cost_price should be hidden for this role.
-        $pdo = require dirname(__DIR__, 2) . '/config/db.php';
-        $hiddenFields = PermissionMiddleware::getRestrictedFields($request->roleId, $pdo);
+        $hiddenFields = PermissionMiddleware::getRestrictedFields($request->roleId, \App\Core\Database::getInstance());
         $hideCostPrice = in_array('cost_price', $hiddenFields, true);
 
         Response::view('layouts/app', [

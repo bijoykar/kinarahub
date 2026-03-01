@@ -152,11 +152,6 @@ class PermissionMiddleware
      */
     private function getPdo(): PDO
     {
-        // config/db.php uses a static singleton pattern — requiring it a second
-        // time returns the same PDO object without opening a new connection.
-        /** @var PDO $pdo */
-        $pdo = require dirname(__DIR__, 2) . '/config/db.php';
-
-        return $pdo;
+        return \App\Core\Database::getInstance();
     }
 }
